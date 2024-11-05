@@ -25,10 +25,23 @@ EPS32 part for Fritzing can be found here [ESP32S-HiLetgo Dev Boad with Pinout T
 
 ![breadboard](./frontend/breadboard.png)
 
-## The Data Partition
-The data partition is used to store files that are not compiled code.
-
-The ``./data`` directory must be built as a Filesystem Image in PlatformIO and uploaded to the ESP32.
+```bash
+# esptool flash_id
+esptool.py v2.8
+Found 1 serial ports
+Serial port /dev/ttyUSB0
+Connecting....
+Detecting chip type... ESP32
+Chip is ESP32D0WDQ5 (revision 3)
+Features: WiFi, BT, Dual Core, 240MHz, VRef calibration in efuse, Coding Scheme None
+Crystal is 40MHz
+MAC: 08:d1:f9:e6:b1:68
+Enabling default SPI flash mode...
+Manufacturer: 5e
+Device: 4016
+Detected flash size: 4MB
+Hard resetting via RTS pin...
+```
 
 ## Wifi Credentials
 These need to be set in ``./data/secrets.txt``.
@@ -41,3 +54,35 @@ WiFi PASS = Slartibartfast
 ```
 
 Copy ``./data/secrets.txt.example`` to ``./data/secrets.txt`` and change the values for the local network. This file will not be uploaded to Git.
+
+# Partitions
+Adding Bluetooth libraries made the binary 1.5MB and was to large for the default 1.3MB app partition.
+
+A custom partition was made to remove OTA partitions and increase the app partition size.
+
+> **_NOTE:_** [Offset must be multiple of 4kB (0x1000) and for app partitions it must be aligned by 64kB (0x10000).](https://developer.espressif.com/blog/how-to-use-custom-partition-tables-on-esp32/)
+
+## The Data Partition
+The data partition is used to store files that are not compiled code.
+
+The ``./data`` directory must be built as a Filesystem Image in PlatformIO and uploaded to the ESP32.
+
+The LibreOffice Calc file is configured to calculate the partition sizes and offsets. It uses a function to convert HEX2DEC, perform the calculations and convert back to HEX with a prefix ``0x``
+
+```
+=CONCAT("0x", DEC2HEX(HEX2DEC(RIGHT(D3, LEN(D3)-2))+HEX2DEC(RIGHT(E3, LEN(E3)-2))))
+```
+
+# Frontend CDN
+The frontend files are served from a CDN (Content Delivery Network).
+To do this ``Access-Control-Allow-Origin`` is set in the header served by [webServer.cpp](./src/webServer.cpp)
+and in the [CDN](https://haruspex.SiliconTao.com/).
+For development the frontend can be served locally using [webServer.py](./frontend/webServer.py) that has CORS enabled.
+
+## Useful Links
+- [ESP32 Dev Kit Power Options](https://techexplorations.com/guides/esp32/begin/power/)
+- [Amazon ESP32 Dev](https://www.amazon.ca/gp/product/B07QCP2451/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&th=1)
+- [ESP32-WROOM Datasheet](https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32_datasheet_en.pdf)
+- [FCC Report for 2A4RQ-ESP32](https://fcc.report/FCC-ID/2A4RQ-ESP32)
+- [ESP32 Partition Tables](https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-guides/partition-tables.html)
+- [ESP32 Partition Calculator](https://esp32.jgarrettcorbin.com/)

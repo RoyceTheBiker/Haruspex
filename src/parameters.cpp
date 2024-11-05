@@ -1,6 +1,6 @@
 #include <SPIFFS.h>
 
-int readValue(char* fileName, char* paramName, char valueBuffer[]) {
+int readValue(const char* fileName, char* paramName, char valueBuffer[]) {
   int returnLength = 0;
   valueBuffer[0] = 0;
   File file = SPIFFS.open(fileName);
@@ -27,6 +27,6 @@ int readValue(char* fileName, char* paramName, char valueBuffer[]) {
   return(returnLength);
 }
 
-int writeValue(char* fileName, char* paramName, char *paramValue) {
+int writeValue(const char* fileName, char* paramName, char *paramValue) {
   return(0);
 }
