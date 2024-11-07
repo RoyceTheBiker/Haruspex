@@ -1,5 +1,5 @@
 import { PermissionsAndroid, Platform } from "react-native";
-import ExpoDevice from 'expo-device';
+import * as ExpoDevice from 'expo-device';
 
 export default function useBLE() {
     const requestAndroid31Permissions = async () => {
@@ -36,8 +36,11 @@ export default function useBLE() {
     };
     
     const requestPermissions = async () => {
+        console.log('requestPermissions function');
         if (Platform.OS === "android") {
+            console.log('requestPermissions Android');
             if ((ExpoDevice.platformApiLevel ?? -1) < 31) {
+                console.log('requestPermissions older Android');
                 const granted = await PermissionsAndroid.request(
                     PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
                     {
@@ -49,6 +52,7 @@ export default function useBLE() {
                 return granted === PermissionsAndroid.RESULTS.GRANTED;
             
             } else {
+                console.log('requestPermissions newer Android');
                 const isAndroid31PermissionsGranted = await requestAndroid31Permissions();
                 return isAndroid31PermissionsGranted;
             }
@@ -57,4 +61,10 @@ export default function useBLE() {
         }
     };
     
+    console.log('Device name ' + ExpoDevice.deviceName);
+    console.log('Device brand ' + ExpoDevice.brand);
+    console.log('Device type ' + ExpoDevice.deviceType);
+    console.log('Device year class ' + ExpoDevice.deviceYearClass);
+    
+    requestPermissions();
 }

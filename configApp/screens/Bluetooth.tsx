@@ -1,6 +1,8 @@
 import { styles } from '../styles/globalStyles';
 import React, { useState } from 'react';
 import { NativeEventEmitter, NativeModules, Text, TouchableOpacity, View } from 'react-native';
+import useBLE from '../libraries/useBLE';
+import { BleManager } from 'react-native-ble-plx';
 
 const data = [
     {
@@ -53,11 +55,13 @@ function renderRow(btDevice, connectToDevice) {
 }
 
 const connectToDevice = () => {
+  
   // call the navigator to move to the wi-fi screen
 }
 
 export default function Bluetooth(navigation) {
-  
+  useBLE();
+  const bleManager = new BleManager();
     
   // react-native-ble-manager was removed because Expo does not support AndroidManifest
   // BleManager.start({ showAlert: false }).then(() => {

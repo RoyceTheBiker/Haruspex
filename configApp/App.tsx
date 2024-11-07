@@ -3,10 +3,8 @@ import { NavigationContainer } from '@react-navigation/native'
 import { Stack } from './routes/appStack'
 import Bluetooth from './screens/Bluetooth';
 import WifiSetup from './screens/WifiSetup';
-import useBLE from './libraries/useBLE';
 
 export default function App() {
-  useBLE();
   
   return (
     <NavigationContainer
