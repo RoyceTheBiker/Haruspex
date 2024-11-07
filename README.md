@@ -46,6 +46,18 @@ Hard resetting via RTS pin...
 ## configApp
 An Android app developed using Ract-Native Expo
 
+First attepmt to use Bluetooth was with [react-native-ble-manager](https://www.npmjs.com/package/react-native-ble-manager) which seems like a great choice with support for Android 4 and newer APIs. 
+Unfortunatly it does not seem to be compatible with Expo because it requires setting [AndroidManifest](https://github.com/innoveit/react-native-ble-manager/blob/master/example/plugins/withBLEAndroidManifest.js) that is not supported by Expo, or at least not in this way.
+
+Expo has a different module [react-native-ble-plx](https://expo.dev/blog/how-to-build-a-bluetooth-low-energy-powered-expo-app)
+
+Hopefully it is also supported by [Expo Go](https://expo.dev/go) as it is a handy tool to debug changes live.
+
+```bash
+npm uninstall react-native-ble-manager
+npx expo install react-native-ble-plx
+```
+
 Installing VSCode plugins:
  - Expo Tools
 
@@ -94,3 +106,5 @@ For development the frontend can be served locally using [webServer.py](./fronte
 - [FCC Report for 2A4RQ-ESP32](https://fcc.report/FCC-ID/2A4RQ-ESP32)
 - [ESP32 Partition Tables](https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-guides/partition-tables.html)
 - [ESP32 Partition Calculator](https://esp32.jgarrettcorbin.com/)
+- [react-native-ble-plx-demo](https://github.com/priyanka-Sadh/react-native-ble-plx-demo)
+- [Example of Expo with react-native-ble-pl](https://blog.theodo.com/2023/07/ble-integration-for-rn-apps/)
