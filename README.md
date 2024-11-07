@@ -43,6 +43,14 @@ Detected flash size: 4MB
 Hard resetting via RTS pin...
 ```
 
+## configApp
+An Android app developed using Ract-Native Expo
+
+Installing VSCode plugins:
+ - Expo Tools
+
+To build the APK use [eas-cli](https://www.npmjs.com/package/eas-cli)
+
 ## Wifi Credentials
 These need to be set in ``./data/secrets.txt``.
 
