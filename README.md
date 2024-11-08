@@ -1,5 +1,4 @@
-# Haruspex
-
+# Haruspex 
 A web server built on the ESP32 platform.
 
 First commit was a rudimentary web server as taken from the example [ESP32 Web Server](https://randomnerdtutorials.com/esp32-web-server-arduino-ide/)
@@ -7,9 +6,25 @@ with some small changes.
 
 Code was changed to not block requests from other clients so that multiple connections can be made.
 
+<!-- vscode-markdown-toc -->
+* 1. [Development](#Development)
+	* 1.1. [VS Codium](#VSCodium)
+	* 1.2. [Hardware](#Hardware)
+* 2. [configApp](#configApp)
+* 3. [Compiling The APK](#CompilingTheAPK)
+* 4. [Wifi Credentials](#WifiCredentials)
+* 5. [The Data Partition](#TheDataPartition)
+* 6. [Useful Links](#UsefulLinks)
 
-## Development
-### VS Codium
+<!-- vscode-markdown-toc-config
+	numbering=true
+	autoSave=true
+	/vscode-markdown-toc-config -->
+<!-- /vscode-markdown-toc -->
+
+
+##  1. <a name='Development'></a>Development
+###  1.1. <a name='VSCodium'></a>VS Codium
 The development of this project is done with VSCodium and the PlatformIO extension.
 
 VSCodium is not supported by Microsoft and so these plugins must be manually installed.
@@ -18,7 +33,7 @@ VSCodium is not supported by Microsoft and so these plugins must be manually ins
 3. Download [PlatformIO vsix](https://marketplace.visualstudio.com/items?itemName=platformio.platformio-ide) (download button on right side)
 4. Install PlatformIO vsix in vscodium under extensions / install from vsix
 
-### Hardware
+###  1.2. <a name='Hardware'></a>Hardware
 [Fritzing](https://fritzing.org/) was used to create the board layout.
 
 EPS32 part for Fritzing can be found here [ESP32S-HiLetgo Dev Boad with Pinout Template](https://forum.fritzing.org/t/esp32s-hiletgo-dev-boad-with-pinout-template/5357?u=steelgoose)
@@ -43,7 +58,7 @@ Detected flash size: 4MB
 Hard resetting via RTS pin...
 ```
 
-## configApp
+##  2. <a name='configApp'></a>configApp
 An Android app developed using Ract-Native Expo
 
 First attepmt to use Bluetooth was with [react-native-ble-manager](https://www.npmjs.com/package/react-native-ble-manager) which seems like a great choice with support for Android 4 and newer APIs. 
@@ -61,9 +76,42 @@ npx expo install react-native-ble-plx
 Installing VSCode plugins:
  - Expo Tools
 
+Installing Android Studio
+```bash
+brew install --cask android-platform-tools
+rehash
+adb device
+```
+
+```bash
+#npx npm install eas-cli
+npm install --global eas-cli
+npx expo prebuild
+npx expo install expo-dev-client
+npx expo run:android
+```
+
 To build the APK use [eas-cli](https://www.npmjs.com/package/eas-cli)
 
-## Wifi Credentials
+Set the Android SDK path and environment variable in the shell profile
+```bash
+export ANDROID_HOME=$HOME/Library/Android/sdk
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+export PATH=$PATH:$ANDROID_HOME/tools
+export PATH=$PATH:$ANDROID_HOME/tools/bin
+export PATH=$PATH:$ANDROID_HOME/emulator
+```
+
+npx expo install react-native-gesture-handler react-native-safe-area-context react-native-reanimated react-native-screens
+
+##  3. <a name='CompilingTheAPK'></a>Compiling The APK
+This step requiers the user to have a login account with [Expo](https://expo.dev)
+
+```bash
+eas build -p android --profile development
+```
+
+##  4. <a name='WifiCredentials'></a>Wifi Credentials
 These need to be set in ``./data/secrets.txt``.
 
 An example can be found in ``./data/secrets.txt.example``
@@ -82,7 +130,7 @@ A custom partition was made to remove OTA partitions and increase the app partit
 
 > **_NOTE:_** [Offset must be multiple of 4kB (0x1000) and for app partitions it must be aligned by 64kB (0x10000).](https://developer.espressif.com/blog/how-to-use-custom-partition-tables-on-esp32/)
 
-## The Data Partition
+##  5. <a name='TheDataPartition'></a>The Data Partition
 The data partition is used to store files that are not compiled code.
 
 The ``./data`` directory must be built as a Filesystem Image in PlatformIO and uploaded to the ESP32.
@@ -99,7 +147,7 @@ To do this ``Access-Control-Allow-Origin`` is set in the header served by [webSe
 and in the [CDN](https://haruspex.SiliconTao.com/).
 For development the frontend can be served locally using [webServer.py](./frontend/webServer.py) that has CORS enabled.
 
-## Useful Links
+##  6. <a name='UsefulLinks'></a>Useful Links
 - [ESP32 Dev Kit Power Options](https://techexplorations.com/guides/esp32/begin/power/)
 - [Amazon ESP32 Dev](https://www.amazon.ca/gp/product/B07QCP2451/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&th=1)
 - [ESP32-WROOM Datasheet](https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32_datasheet_en.pdf)

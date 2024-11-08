@@ -1,0 +1,28 @@
+{
+    "build": {
+      "base": {
+        "node": "19.8.1",
+        "env": {
+          "Haruspex": "configApp"
+        },
+        "android": {
+          "image": "default",
+          "env": {
+            "PLATFORM": "android"
+          }
+        }
+      },
+      "development": {
+        "extends": "base",
+        "developmentClient": true,
+        "env": {
+          "ENVIRONMENT": "development"
+        },
+        "android": {
+          "distribution": "internal",
+          "withoutCredentials": true,
+          "buildType": "apk"
+        }
+      }
+    }
+  }

@@ -61,21 +61,18 @@ const connectToDevice = () => {
 
 export default function Bluetooth(navigation) {
   useBLE();
+  console.log('Ready to use BLE');
   const bleManager = new BleManager();
-    
-  // react-native-ble-manager was removed because Expo does not support AndroidManifest
-  // BleManager.start({ showAlert: false }).then(() => {
-  //   // Success code
-  //   console.log("Module initialized");
-  
-  //   enableBluetooth();
-  //   startScan();
-  // });
-  // const connectToDevice = (deviceName) => {
-  //   // lookup device by name
-  //   togglePeripheralConnection(item);
-  //   navigation.navigate('Wi-Fi Setup', {name: btDevice.name});
-  // }
+  bleManager.startDeviceScan(null, null, (error, device) => {
+    if (error) {
+      console.log('Device scan error %s', error.message);
+    } else {
+      if(device) {
+        console.log('Found device %s %s', device.name, device.localName);
+      }
+    }
+  });
+
 
   return (
     <View style={styles.tableContainer}>
