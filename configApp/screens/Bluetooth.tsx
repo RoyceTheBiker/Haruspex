@@ -2,7 +2,7 @@ import { styles } from '../styles/globalStyles';
 import React, { useState } from 'react';
 import { NativeEventEmitter, NativeModules, Text, TouchableOpacity, View } from 'react-native';
 import useBLE from '../libraries/useBLE';
-import { BleManager } from 'react-native-ble-plx';
+import { BleManager, Device } from 'react-native-ble-plx';
 
 const data = [
     {
@@ -60,18 +60,33 @@ const connectToDevice = () => {
 }
 
 export default function Bluetooth(navigation) {
+  const [allDevices, setAllDevices] = useState<Device[]>([]);
+
+  const isDuplicteDevice = (devices: Device[], nextDevice: Device) =>
+    devices.findIndex((device) => nextDevice.id === device.id) > -1;
+
   useBLE();
   console.log('Ready to use BLE');
   const bleManager = new BleManager();
-  bleManager.startDeviceScan(null, null, (error, device) => {
-    if (error) {
-      console.log('Device scan error %s', error.message);
-    } else {
-      if(device) {
-        console.log('Found device %s %s', device.name, device.localName);
+  if(bleManager) {
+    bleManager.startDeviceScan(null, null, (error, device) => {
+      if (error) {
+        console.log('Device scan error %s', error.message);
+      } else {
+        if(device && (device.localName || device.name)) {
+          setAllDevices((prevState: Device[]) => {
+            if (!isDuplicteDevice(prevState, device)) {
+              console.log('Found device %s %s', device.name, device.localName);
+              return [...prevState, device];
+            }
+            return prevState;
+          });
+        }
       }
-    }
-  });
+    });
+  } else {
+    console.log('No BLE device');
+  }
 
 
   return (

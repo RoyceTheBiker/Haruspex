@@ -11,7 +11,7 @@
   "dependencies": {
     "@types/react": "~18.2.79",
     "eas-cli": "^13.1.0",
-    "expo": "~51.0.28",
+    "expo": "~51.0.26",
     "expo-constants": "~16.0.2",
     "expo-device": "~6.0.2",
     "expo-linking": "~6.3.1",

@@ -6,7 +6,7 @@
           "Haruspex": "configApp"
         },
         "android": {
-          "image": "default",
+          "image": "latest",
           "env": {
             "PLATFORM": "android"
           }
@@ -25,4 +25,4 @@
         }
       }
     }
-  }
+}

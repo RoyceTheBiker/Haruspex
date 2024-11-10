@@ -107,6 +107,8 @@ npx expo install react-native-gesture-handler react-native-safe-area-context rea
 ##  3. <a name='CompilingTheAPK'></a>Compiling The APK
 This step requiers the user to have a login account with [Expo](https://expo.dev)
 
+The compiler does not generate log files on the build system. Compile log files are found in the web console for the project on [expo.dev](https://expo.dev/)
+
 ```bash
 eas build -p android --profile development
 ```

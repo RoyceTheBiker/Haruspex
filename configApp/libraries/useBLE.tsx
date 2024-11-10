@@ -67,4 +67,5 @@ export default function useBLE() {
     console.log('Device year class ' + ExpoDevice.deviceYearClass);
     
     requestPermissions();
+
 }
