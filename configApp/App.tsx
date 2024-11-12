@@ -9,7 +9,7 @@ export default function App() {
   return (
     <NavigationContainer
       children={
-        <Stack.Navigator initialRouteName="Bluetooth">
+        <Stack.Navigator initialRouteName="WifiSetup">
           <Stack.Screen name="Select Bluetooth Device" component={Bluetooth} />
           <Stack.Screen name="Wi-Fi Setup" component={WifiSetup} />
         </Stack.Navigator>

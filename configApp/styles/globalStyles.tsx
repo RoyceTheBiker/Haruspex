@@ -17,7 +17,7 @@ export const styles = StyleSheet.create({
       backgroundColor: '#fff',
       borderBottomColor: 'black',
       borderBottomWidth: 1,
-      minWidth: '40%',
+      minWidth: '70%',
       justifyContent: 'center'
     },
     tableRow: {
@@ -26,8 +26,8 @@ export const styles = StyleSheet.create({
       height: 60,
     },
     table: {
-      alignItems: 'left',
-      justifyContent: 'left'
+      // alignItems: 'left',
+      // justifyContent: 'left'
     },
     container: {
       flex: 1,

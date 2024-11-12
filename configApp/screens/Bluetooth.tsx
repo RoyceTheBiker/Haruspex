@@ -3,48 +3,20 @@ import React, { useState } from 'react';
 import { NativeEventEmitter, NativeModules, Text, TouchableOpacity, View } from 'react-native';
 import useBLE from '../libraries/useBLE';
 import { BleManager, Device } from 'react-native-ble-plx';
+// import { Navigation } from 'react-native-navigation';
 
-const data = [
-    {
-      id: 0,
-      name: 'Apple',
-      cost: '$1'
-    }, 
-    {
-      id: 1,
-      name: 'Bacon',
-      cost: '$10'
-    },
-    {
-      id: 2,
-      name: 'Cantaloupe',
-      cost: '$7.50'
-    }, 
-    {
-      id: 3,
-      name: 'Donut',
-      cost: '$2'
-    },
-    {
-      id: 4,
-      name: 'Fish',
-      cost: '$5'
-    }];
-
-    
-
-function renderRow(btDevice, connectToDevice) {
+function renderRow(btDevice, connectToDevice, navigation) {
     return (
         <View style={styles.tableRow} key={btDevice.id}>
             <View style={styles.tableCell}>
                 <Text style={styles.cellText}>{btDevice.name}</Text>
             </View> 
-            <View style={styles.tableCell}>
+            {/* <View style={styles.tableCell}>
                 <Text style={styles.cellText}>{btDevice.cost}</Text>
-            </View> 
+            </View>  */}
             <View style={styles.buttonCell}>
                 <TouchableOpacity style={styles.connectButton}>
-                <Text onPress={() => connectToDevice(btDevice.name)}>
+                <Text onPress={() => connectToDevice(btDevice.name, navigation)}>
                 Connect
                 </Text>
             </TouchableOpacity>
@@ -54,8 +26,8 @@ function renderRow(btDevice, connectToDevice) {
     );
 }
 
-const connectToDevice = () => {
-  
+const connectToDevice = (deviceName, {navigation}) => {
+  navigation.navigate('Wi-Fi Setup', {name: deviceName});
   // call the navigator to move to the wi-fi screen
 }
 
@@ -76,7 +48,7 @@ export default function Bluetooth(navigation) {
         if(device && (device.localName || device.name)) {
           setAllDevices((prevState: Device[]) => {
             if (!isDuplicteDevice(prevState, device)) {
-              console.log('Found device %s %s', device.name, device.localName);
+              console.log('Found device %s', device.name);
               return [...prevState, device];
             }
             return prevState;
@@ -88,7 +60,7 @@ export default function Bluetooth(navigation) {
     console.log('No BLE device');
   }
 
-
+  let idCounter = 0;
   return (
     <View style={styles.tableContainer}>
         <View>
@@ -96,9 +68,11 @@ export default function Bluetooth(navigation) {
         </View>    
         <View style={styles.table}>
         {
-        data.map((dataRow) => { 
-            return renderRow(dataRow, connectToDevice);
-        })
+          allDevices.map( (device) => { 
+              return renderRow(
+                {id: idCounter++, 
+                  name: device.name} , connectToDevice, navigation);
+          })
         }
         </View>
     </View>
