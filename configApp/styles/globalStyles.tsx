@@ -9,7 +9,7 @@ export const styles = StyleSheet.create({
       backgroundColor: '#fff',
       borderBottomColor: 'black',
       borderBottomWidth: 1,
-      minWidth: '20%',
+      minWidth: '25%',
       justifyContent: 'center'
     },
     placeholderStyle: {
@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
       backgroundColor: '#fff',
       borderBottomColor: 'black',
       borderBottomWidth: 1,
-      minWidth: '70%',
+      minWidth: '75%',
       justifyContent: 'center'
     },
     tableRow: {
@@ -29,20 +29,26 @@ export const styles = StyleSheet.create({
       height: 60,
     },
     table: {
-      // alignItems: 'left',
-      // justifyContent: 'left'
+      // flex: 0,
+      backgroundColor: '#555',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: '90%'
+    },
+    pageBody: {
+      width: '100%',
+      height: '100%',
+      // alignItems: 'center',
+      // flex: 1,
+      // justifyContent: 'center',
     },
     container: {
-      flex: 1,
-      backgroundColor: '#fffeee',
+      // flex: 1,
+      // backgroundColor: '#fffeee',
       alignItems: 'center',
       justifyContent: 'center',
-    },
-    tableContainer: {
-      flex: 1,
-      backgroundColor: '#fffeee',
-      alignItems: 'center',
-      justifyContent: 'center',
+      height: '100%',
+      width: '100%',
     },
     button: {
       backgroundColor: 'lightgreen',
@@ -51,6 +57,8 @@ export const styles = StyleSheet.create({
       borderRadius: 4,
       justifyContent: 'center',
       alignItems: 'center',
+      borderBottomWidth: 3,
+      borderRightWidth: 3
     },
     connectButton: {
       backgroundColor: 'lightgreen',
@@ -59,36 +67,39 @@ export const styles = StyleSheet.create({
       borderRadius: 4,
       justifyContent: 'center',
       alignItems: 'center',
+      borderBottomWidth: 1,
+      borderRightWidth: 1
     },
     titleBar: {
       fontSize: 20,
       fontWeight: 'bold',
+      justifyContent: 'center',
     },
     fieldSet:{
-        margin: 10,
-        paddingHorizontal: 10,
-        paddingBottom: 10,
-        borderRadius: 5,
-        borderWidth: 1,
-        alignItems: 'center',
-        borderColor: '#000',
-        width: '80%',
-        height: 50,
-        backgroundColor: '#fff',
+      margin: 10,
+      paddingHorizontal: 10,
+      paddingBottom: 10,
+      borderRadius: 5,
+      borderWidth: 1,
+      alignItems: 'left',
+      borderColor: '#000',
+      minWidth: '90%',
+      height: 50,
+      backgroundColor: '#fff',
     },
     legend:{
-        position: 'absolute',
-        top: -10,
-        left: 10,
-        fontWeight: 'bold',
-        backgroundColor: '#FFFFFF'
+      position: 'absolute',
+      top: -10,
+      left: 10,
+      fontWeight: 'bold',
+      backgroundColor: '#FFFFFF'
     },
     input: {
       height: 40,
       margin: 5,
       width: '100%',
       padding: 10,
-      fontSize: 16,
+      fontSize: 20,
     },
     selectedTextStyle: {
       fontSize: 20,
@@ -104,6 +115,6 @@ export const styles = StyleSheet.create({
     dropdown: {
       height: 50,
       paddingHorizontal: 8,
-      width: '100%'
+      minWidth: '95%'
     },
   });
