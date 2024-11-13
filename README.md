@@ -131,6 +131,12 @@ The compiler does not generate log files on the build system. Compile log files 
 eas build -p android --profile development
 ```
 
+Add ``--local`` to compile locally and not use a build slot on [expo.dev](https://expo.dev)
+```bash
+eas build -p android --profile development --local
+```
+
+
 ##  4. <a name='WifiCredentials'></a>Wifi Credentials
 These need to be set in ``./data/secrets.txt``.
 

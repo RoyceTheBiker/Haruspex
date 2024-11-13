@@ -94,6 +94,7 @@ export default function WifiScreen({navitation, route}) {
             <TextInput
             style={styles.input}
             // onChangeText={onChangeText}
+            secureTextEntry={true}
             placeholder="password"          
             />
         </View>
