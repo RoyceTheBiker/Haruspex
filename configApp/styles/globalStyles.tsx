@@ -12,6 +12,9 @@ export const styles = StyleSheet.create({
       minWidth: '20%',
       justifyContent: 'center'
     },
+    placeholderStyle: {
+      fontSize: 16,
+    },
     tableCell: {
       alignSelf: 'stretch',
       backgroundColor: '#fff',
@@ -82,8 +85,25 @@ export const styles = StyleSheet.create({
     },
     input: {
       height: 40,
-      margin: 12,
+      margin: 5,
       width: '100%',
       padding: 10,
+      fontSize: 16,
+    },
+    selectedTextStyle: {
+      fontSize: 20,
+    },
+    iconStyle: {
+      width: 20,
+      height: 20,
+    },
+    inputSearchStyle: {
+      height: 40,
+      fontSize: 20,
+    },
+    dropdown: {
+      height: 50,
+      paddingHorizontal: 8,
+      width: '100%'
     },
   });

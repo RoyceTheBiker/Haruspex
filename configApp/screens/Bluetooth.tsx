@@ -37,7 +37,6 @@ export default function Bluetooth(navigation) {
   const isDuplicteDevice = (devices: Device[], nextDevice: Device) =>
     devices.findIndex((device) => nextDevice.id === device.id) > -1;
 
-  useBLE();
   console.log('Ready to use BLE');
   const bleManager = new BleManager();
   if(bleManager) {

@@ -66,7 +66,12 @@ Unfortunatly it does not seem to be compatible with Expo because it requires set
 
 Expo has a different module [react-native-ble-plx](https://expo.dev/blog/how-to-build-a-bluetooth-low-energy-powered-expo-app)
 
-Hopefully it is also supported by [Expo Go](https://expo.dev/go) as it is a handy tool to debug changes live.
+[Expo Go](https://expo.dev/go) does not support using the Bluetooth hardware but is great for quickly testing screen layout and desgines, it will automatically update with changes live.
+
+Installing packages uses ``npx expo install <package name>``.
+
+Uninstalling packages uses ``npm uninstall <package name>``.
+
 
 ```bash
 npm uninstall react-native-ble-manager
@@ -103,6 +108,19 @@ export PATH=$PATH:$ANDROID_HOME/emulator
 ```
 
 npx expo install react-native-gesture-handler react-native-safe-area-context react-native-reanimated react-native-screens
+
+## Android Debug Bridge (adb)
+List files in Screenshots folder
+```
+adb shell ls -R "/storage/self/primary/DCIM//Screenshots/"
+```
+
+Download a screenshot
+```
+adb pull /storage/self/primary/DCIM//Screenshots/Screenshot_20241112-092414_Haruspex.jpg ~/Screenshot_20241112-092414_Haruspex.jpg
+/storage/self/primary/DCIM//Screenshots/Screenshot_20241112-092414_Ha...pex.jpg: 1 file pulled, 0 skipped. 13.0 MB/s (191856 bytes in 0.014s)
+```
+
 
 ##  3. <a name='CompilingTheAPK'></a>Compiling The APK
 This step requiers the user to have a login account with [Expo](https://expo.dev)
