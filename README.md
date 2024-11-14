@@ -1,4 +1,4 @@
-# Haruspex 
+# Haruspex
 A web server built on the ESP32 platform.
 
 First commit was a rudimentary web server as taken from the example [ESP32 Web Server](https://randomnerdtutorials.com/esp32-web-server-arduino-ide/)
@@ -61,7 +61,7 @@ Hard resetting via RTS pin...
 ##  2. <a name='configApp'></a>configApp
 An Android app developed using Ract-Native Expo
 
-First attepmt to use Bluetooth was with [react-native-ble-manager](https://www.npmjs.com/package/react-native-ble-manager) which seems like a great choice with support for Android 4 and newer APIs. 
+First attepmt to use Bluetooth was with [react-native-ble-manager](https://www.npmjs.com/package/react-native-ble-manager) which seems like a great choice with support for Android 4 and newer APIs.
 Unfortunatly it does not seem to be compatible with Expo because it requires setting [AndroidManifest](https://github.com/innoveit/react-native-ble-manager/blob/master/example/plugins/withBLEAndroidManifest.js) that is not supported by Expo, or at least not in this way.
 
 Expo has a different module [react-native-ble-plx](https://expo.dev/blog/how-to-build-a-bluetooth-low-energy-powered-expo-app)
@@ -182,3 +182,4 @@ For development the frontend can be served locally using [webServer.py](./fronte
 - [ESP32 Partition Calculator](https://esp32.jgarrettcorbin.com/)
 - [react-native-ble-plx-demo](https://github.com/priyanka-Sadh/react-native-ble-plx-demo)
 - [Example of Expo with react-native-ble-pl](https://blog.theodo.com/2023/07/ble-integration-for-rn-apps/)
+- [Bluetooth ESP32](https://dronebotworkshop.com/esp32-bluetooth/)
