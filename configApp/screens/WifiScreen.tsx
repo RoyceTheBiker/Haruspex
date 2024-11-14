@@ -12,18 +12,13 @@ type WlanT = {
 }
 
 export default function WifiScreen({navitation, route}) {
-    const [wifiSsids, setWifiSsids] = useState([]);
-    const [wlanSSIDs, setWlanSSIDs] = useState<WlanT[]>([]);
+    const [wifiSsids, setWifiSsids] = useState<WlanT[]>([]);
     const [defaultSSID, setDefaultSSID] = useState('');
     
-    WifiManager.getCurrentWifiSSID().then( (ssid) => {
-        console.log('Default %s', ssid);
-        setDefaultSSID(ssid);
-    });
+    const isDuplicte = (wlans: WlanT[], nextWlan: string) =>
+        wlans.findIndex((wlan) => nextWlan === wlan.label) > -1;
+    let ssidCount = 0;
 
-    const isDuplicte = (wlans: string[], nextWlan: string) =>
-        wlans.findIndex((wlan) => nextWlan === wlan) > -1;
-    
     const getWifiList = async() => {
         // let isWifiEnabled = await WifiManager.isEnabled;
         // if(isWifiEnabled) {
@@ -32,44 +27,31 @@ export default function WifiScreen({navitation, route}) {
         //     console.log('wifi seems to be off');
         // }
         let wlanId = 0;
-        //let wifiStringList = 
         await WifiManager.loadWifiList().then( (wlans) => {
             wlans.map( (wL) => {
-                console.log('What is this thing %s', JSON.stringify(wL.SSID));
-                setWifiSsids((prevState: string[]) => {
-                    console.log('wlan.SSID %s', wL.SSID);
-                    // console.log('indexOf hidden %d', wlan.SSID.indexOf('(hidden SSID)'));
+                setWifiSsids((prevState: WlanT[]) => {
                     if ((!isDuplicte(prevState, wL.SSID)) && (wL.SSID.indexOf('(hidden SSID)') < 0) ) {
-                    //   console.log('Found device %s', wlan.SSID);
-                    return [...prevState, wL.SSID];
+                        console.log('Found device %s', wL.SSID);
+                        return [...prevState,  {id: ssidCount++, label: wL.SSID, current: wL.SSID === defaultSSID ? true : false}];
                     }
                     return prevState;
                 });
             });
         });
     };
-    let ssidCount = 0;
-    let scanCount = 0;
 
     // This page is constantly refreshing causing the Wi-Fi scan to run many, many times.
     // It slows down the program when the scan is constanly being ran.
     // This only runs the scan if there are no VLANs in the list.
-    // if(wlanSSIDs.length === 0) {
-        getWifiList().then( () => {
-            wifiSsids.map( (wlan) => {
-                setWlanSSIDs( (prevState: WlanT[]) => {
-                    console.log('scan count %d %s', scanCount++, wlan);
-                    if(prevState.findIndex(w => w.label === wlan) < 0) {
-                        return [...prevState, {id: ssidCount++, label: wlan, current: wlan === defaultSSID ? true : false}];
-                    } else {
-                        return prevState;
-                    }
-                })
-                // console.log('WLAN %s', wlan);
-            });
+    if(wifiSsids.length === 0) {
+        WifiManager.getCurrentWifiSSID().then( (ssid) => {
+            console.log('Default %s', ssid);
+            setDefaultSSID(ssid);
         });
-    // }
-  
+    
+        getWifiList();
+    }
+
     return (
         <View style={styles.container}>
             <ImageBackground
@@ -95,7 +77,7 @@ export default function WifiScreen({navitation, route}) {
                             
                             selectedTextStyle={styles.selectedTextStyle}
                             inputSearchStyle={styles.inputSearchStyle}
-                            data={wlanSSIDs} 
+                            data={wifiSsids} 
                             labelField="label" 
                             value={defaultSSID} 
                             valueField="label"
