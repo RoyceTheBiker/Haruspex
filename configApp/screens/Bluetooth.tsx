@@ -1,30 +1,26 @@
 import { styles } from '../styles/globalStyles';
 import React, { useState } from 'react';
-import { ImageBackground, NativeEventEmitter, NativeModules, Text, TouchableOpacity, View } from 'react-native';
-import useBLE from '../libraries/useBLE';
-import { BleManager, Device } from 'react-native-ble-plx';
+import { ImageBackground, Text, TouchableOpacity, View } from 'react-native';
+import { BleManager, Device, State } from 'react-native-ble-plx';
 import { Asset } from 'expo-asset';
-// import { Navigation } from 'react-native-navigation';
+import bluetoothPermissions from '../libraries/bluetoothPermissions';
 
 function renderRow(btDevice, connectToDevice, navigation) {
-    return (
-        <View style={styles.tableRow} key={btDevice.id}>
-            <View style={styles.tableCell}>
-                <Text style={styles.cellText}>{btDevice.name}</Text>
-            </View> 
-            {/* <View style={styles.tableCell}>
-                <Text style={styles.cellText}>{btDevice.cost}</Text>
-            </View>  */}
-            <View style={styles.buttonCell}>
-                <TouchableOpacity style={styles.connectButton} activeOpacity={1}>
-                <Text onPress={() => connectToDevice(btDevice.name, navigation)}>
-                Connect
-                </Text>
-            </TouchableOpacity>
-            
-            </View> 
-        </View>
-    );
+  console.log('BT render row %s', btDevice);
+  return (
+    <View style={styles.tableRow} key={btDevice.id}>
+      <View style={styles.tableCell}>
+        <Text style={styles.cellText}>{btDevice.name}</Text>
+      </View>
+      <View style={styles.buttonCell}>
+        <TouchableOpacity style={styles.connectButton} activeOpacity={1}>
+          <Text onPress={() => connectToDevice(btDevice.name, navigation)}>
+            Connect
+          </Text>
+        </TouchableOpacity>
+      </View> 
+    </View>
+  );
 }
 
 const connectToDevice = (deviceName, {navigation}) => {
@@ -34,31 +30,50 @@ const connectToDevice = (deviceName, {navigation}) => {
 }
 
 export default function Bluetooth(navigation) {
-  const [allDevices, setAllDevices] = useState<Device[]>([]);
+  bluetoothPermissions();
 
-  const isDuplicteDevice = (devices: Device[], nextDevice: Device) =>
-    devices.findIndex((device) => nextDevice.id === device.id) > -1;
+  const [allDevices, setAllDevices] = useState<string[]>([]);
 
-  console.log('Ready to use BLE');
-  const bleManager = new BleManager();
-  if(bleManager) {
-    bleManager.startDeviceScan(null, null, (error, device) => {
-      if (error) {
-        console.log('Device scan error %s', error.message);
-      } else {
-        if(device && (device.localName || device.name)) {
-          setAllDevices((prevState: Device[]) => {
-            if (!isDuplicteDevice(prevState, device)) {
-              console.log('Found device %s', device.name);
-              return [...prevState, device];
-            }
-            return prevState;
-          });
+  const isDuplicteDevice = (devices: string[], nextDevice: string) =>
+    devices.findIndex((device) => nextDevice === device) > -1;
+
+  if(allDevices.length === 0) {
+    const bleManager = new BleManager();
+    
+    if(bleManager) {
+      console.log('Ready to use BLE');
+      bleManager.startDeviceScan(null, null, (error, device) => {
+        if (error) {
+          console.log('Device scan error %s', error.message);
+        } else {
+          if(device && (device.localName || device.name)) {
+            setAllDevices((prevState: string[]) => {
+              if (!isDuplicteDevice(prevState, device.name)) {
+                console.log('Found device %s', device.name);
+                return [...prevState, device.name];
+              }
+              return prevState;
+            });
+          }
         }
+      });
+    }
+    bleManager.state().then( (bleState: State) => {
+      console.log('BLE State is %s', bleState);
+      if(bleState === 'Unsupported') {
+        // For debugging the screen layouts in Expres Go and AVD
+        console.log('No BLE device');
+        setAllDevices( (prevState: string[]) => {
+          return [...prevState, 'Fake 1']
+        });
+        setAllDevices( (prevState: string[]) => {
+          return [...prevState, 'Fake 2']
+        });
+        setAllDevices( (prevState: string[]) => {
+          return [...prevState, 'Fake 3']
+        });
       }
     });
-  } else {
-    console.log('No BLE device');
   }
 
   let idCounter = 0;
@@ -74,7 +89,7 @@ export default function Bluetooth(navigation) {
               allDevices.map( (device) => { 
                   return renderRow(
                     {id: idCounter++, 
-                      name: device.name} , connectToDevice, navigation);
+                      name: device} , connectToDevice, navigation);
               })
             }
           </View>    

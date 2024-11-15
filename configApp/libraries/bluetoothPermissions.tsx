@@ -1,7 +1,7 @@
 import { PermissionsAndroid, Platform } from "react-native";
 import * as ExpoDevice from 'expo-device';
 
-export default function useBLE() {
+export default function bluetoothPermissions() {
     const requestAndroid31Permissions = async () => {
         const bluetoothScanPermission = await PermissionsAndroid.request(
             PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,

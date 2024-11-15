@@ -4,11 +4,9 @@ import { Stack } from './routes/appStack'
 import Bluetooth from './screens/Bluetooth';
 import WifiScreen from './screens/WifiScreen';
 import useWiFi from './libraries/useWiFi';
-import useBLE from './libraries/useBLE';
 
 export default function App() {
   useWiFi();
-  useBLE();
   return (
     <NavigationContainer
       children={

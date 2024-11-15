@@ -95,11 +95,11 @@ export const styles = StyleSheet.create({
       backgroundColor: '#FFFFFF'
     },
     input: {
-      height: 40,
-      margin: 5,
-      width: '100%',
+      minHeight: 50,
+      // margin: 5,
+      flex: 1,
       padding: 10,
-      fontSize: 20,
+      fontSize: 20
     },
     selectedTextStyle: {
       fontSize: 20,

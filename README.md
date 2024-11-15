@@ -121,6 +121,14 @@ adb pull /storage/self/primary/DCIM//Screenshots/Screenshot_20241112-092414_Haru
 /storage/self/primary/DCIM//Screenshots/Screenshot_20241112-092414_Ha...pex.jpg: 1 file pulled, 0 skipped. 13.0 MB/s (191856 bytes in 0.014s)
 ```
 
+## Running In AVD
+Android Virtual Device must be setup in Android Studio before running in this way. 
+
+AVD does not have access to Bluetooth device.
+
+```bash
+npx expo run:android
+```
 
 ##  3. <a name='CompilingTheAPK'></a>Compiling The APK
 This step requiers the user to have a login account with [Expo](https://expo.dev)
