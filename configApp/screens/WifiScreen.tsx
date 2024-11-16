@@ -4,7 +4,7 @@ import { styles } from '../styles/globalStyles';
 import { Alert, ImageBackground, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import WifiManager from 'react-native-wifi-reborn';
 import { Asset } from 'expo-asset';
-import { initBluetooth, getData } from '../libraries/bluetoothComs';
+import { initBluetooth, getData, connectToDevice } from '../libraries/bluetoothComs';
 import { Esp32ConfT } from '../models/esp32Conf';
 
 type WlanT = {
@@ -23,8 +23,6 @@ export default function WifiScreen({navitation, route}) {
     const [esp32Cdn, setEsp32Cdn] = useState('https://cdn.SiliconTao.com');
     const [changePassPlaceholder, setChangePassPlaceholder] = useState('password');
     const [selectedSSID, setSelectedSSID] = useState('');
-
-    initBluetooth(route.params.name);
 
     const isDuplicte = (wlans: WlanT[], nextWlan: string) =>
         wlans.findIndex((wlan) => nextWlan === wlan.label) > -1;
@@ -64,6 +62,8 @@ export default function WifiScreen({navitation, route}) {
     // It slows down the program when the scan is constanly being ran.
     // This only runs the scan if there are no VLANs in the list.
     if(wifiSsids.length === 0) {
+        
+
         if(!defaultSSID) {
             WifiManager.getCurrentWifiSSID().then( (ssid) => {
                 // console.log('Default %s', ssid);
@@ -74,18 +74,24 @@ export default function WifiScreen({navitation, route}) {
             });
         } else {
             if(!esp32SSID) {
-                getData("GET config").then( (responce: string) => {
-                    console.log('Got BLE responce %s', responce);
-                    let respJ = JSON.parse(responce) as Esp32ConfT;
-                    setEsp32Hostname(respJ.esp32Hostname);
-                    if(respJ.esp32SSID.length > 0) {
-                        setEsp32SSID(respJ.esp32SSID);
-                    }
-                    setesp32PasswdIsSet(respJ.esp32PasswdSet);
-                    if(respJ.esp32PasswdSet === true) {
-                        setChangePassPlaceholder('change password');
-                    }
-                    setEsp32Cdn(respJ.esp32Cdn);
+                initBluetooth(route.params.name).then( (message) => {
+                    console.log('BT message %s', message);
+                    connectToDevice(esp32Hostname).then( (message: string) => {
+                        console.log('Message from BTLE %s', message);
+                        getData("GET config").then( (responce: string) => {
+                            console.log('Got BLE responce %s', responce);
+                            let respJ = JSON.parse(responce) as Esp32ConfT;
+                            setEsp32Hostname(respJ.esp32Hostname);
+                            if(respJ.esp32SSID.length > 0) {
+                                setEsp32SSID(respJ.esp32SSID);
+                            }
+                            setesp32PasswdIsSet(respJ.esp32PasswdSet);
+                            if(respJ.esp32PasswdSet === true) {
+                                setChangePassPlaceholder('change password');
+                            }
+                            setEsp32Cdn(respJ.esp32Cdn);
+                        });
+                    });
                 });
             } else {
                 getWifiList();
