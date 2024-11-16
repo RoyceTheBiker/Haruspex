@@ -7,20 +7,26 @@
 // BluetoothSerial SerialBT;
 // https://www.uuidgenerator.net/
 #define SERVICE_UUID        "aac12ad2-a77c-48e2-89ad-a3e7a32422fe"
-#define CHARACTERISTIC_UUID "f78f9b6c-c078-4ef1-af4f-b68c1df1af4e"
+#define WRITE_CHARACTERISTIC_UUID "f78f9b6c-c078-4ef1-af4f-b68c1df1af4e"
+#define READ_CHARACTERISTIC_UUID "915bb543-3299-403d-b924-b2c1887b4c82"
 
 BLEServer *pServer = NULL;
 BLEService *pService = NULL;
-BLECharacteristic *pCharacteristic = NULL;
+BLECharacteristic *pWriteCharacteristic = NULL;
+BLECharacteristic *pReadCharacteristic = NULL;
 BLEAdvertising *pAdvertising = NULL;
 
 void btControlSetup() {
   BLEDevice::init("Haruspex ESP32");
   pServer = BLEDevice::createServer();
   pService = pServer->createService(SERVICE_UUID);
-  pCharacteristic =
-    pService->createCharacteristic(CHARACTERISTIC_UUID, BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE);
-  // pCharacteristic->setValue("Hello from Haruspex");
+  pWriteCharacteristic =
+    pService->createCharacteristic(WRITE_CHARACTERISTIC_UUID,
+    BLECharacteristic::PROPERTY_WRITE);
+
+  pReadCharacteristic =
+    pService->createCharacteristic(READ_CHARACTERISTIC_UUID,
+    BLECharacteristic::PROPERTY_READ);
   pService->start();
   pAdvertising = BLEDevice::getAdvertising();
   pAdvertising->addServiceUUID(SERVICE_UUID);
@@ -32,13 +38,19 @@ void btControlSetup() {
 }
 
 void btControlListen() {
-  int dataReady = pCharacteristic->getLength();
+  int dataReady = pWriteCharacteristic->getLength();
   if(dataReady > 0) {
     Serial.print("BT data ready ");
     Serial.println(dataReady, DEC);
-    std::string data = pCharacteristic->getValue();
-    Serial.print("Data received ");
-    Serial.println(data.c_str());
+    std::string data = pWriteCharacteristic->getValue();
 
+    // uint32_t int_val = (uint32_t) data.c_str();
+    Serial.print("Data received ");
+    Serial.println(data.length(), DEC);
+
+    // Do something based on what the Read was
+    // Reply with "Hello"
+    byte response[] = { 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x00 };
+    pReadCharacteristic->setValue(response, 6);
   }
 }
