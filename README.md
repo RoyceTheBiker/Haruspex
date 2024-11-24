@@ -72,6 +72,7 @@ Installing packages uses ``npx expo install <package name>``.
 
 Uninstalling packages uses ``npm uninstall <package name>``.
 
+Oriinally tried using ``react-native-ble-manager`` but could not get it to work.
 
 ```bash
 npm uninstall react-native-ble-manager
@@ -122,7 +123,7 @@ adb pull /storage/self/primary/DCIM//Screenshots/Screenshot_20241112-092414_Haru
 ```
 
 ## Running In AVD
-Android Virtual Device must be setup in Android Studio before running in this way. 
+Android Virtual Device must be setup in Android Studio before running in this way.
 
 AVD does not have access to Bluetooth device.
 

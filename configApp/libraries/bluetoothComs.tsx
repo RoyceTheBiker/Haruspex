@@ -1,6 +1,7 @@
 import { BleManager, Characteristic, Device, Service, State } from "react-native-ble-plx";
 import { Esp32ConfT } from "../models/esp32Conf";
-import { btoa, atob } from "react-native-quick-base64";
+// import { btoa, atob } from "react-native-quick-base64";
+import {decode as atob, encode as btoa} from 'base-64'
 
 let bleManager: BleManager;
 let btDevice: Device;
@@ -21,14 +22,14 @@ export const initBluetooth = (connectDevice: string): Promise<string> => {
                         console.log('Device scan error %s', error.message);
                     } else {
                         if((connectDevice === device.localName) || (connectDevice === device.name)) {
-                            console.log('BT Device is set');
+                            // console.log('BT Device is set');
                             btDevice = device;
                             resolve('Connected');
                         }
                     }
                 });
             }
-        }  
+        }
     });
 }
 
@@ -40,7 +41,7 @@ export const connectToDevice = (deviceName: string): Promise<string> => {
             console.log('Discovering characteristics');
             return device.discoverAllServicesAndCharacteristics();
         }).then( (device: Device) => {
-            console.log('charactoristics discovered');            
+            console.log('charactoristics discovered');
             return device.services();
         }).then( (services: Service[]) => {
             btServices = new Array<Service>;
@@ -62,8 +63,13 @@ export const connectToDevice = (deviceName: string): Promise<string> => {
     });
 }
 
+// const char2Hex = (charByte: number): string => {
+
+// }
+
 export const getData = (request: string): Promise<string> => {
-    console.log('GET %s', request);
+    console.log('Request: %s', request);
+
 
     return new Promise( (resolve) => {
         let replyConf = {
@@ -73,23 +79,28 @@ export const getData = (request: string): Promise<string> => {
             esp32SSID: 'Freeman' } as Esp32ConfT;
 
         let returnMessage = JSON.stringify(replyConf);
-        
+
         bleManager.state().then( (bleState: State) => {
             console.log('BLE State is %s', bleState);
-            if(bleState === 'PoweredOn') {   
+            if(bleState === 'PoweredOn') {
                 console.log('Sending message to %s', writeChannel.uuid);
-                console.log('request length %d', request.length);                            
+                console.log('request length %d', request.length);
                 while(request.length % 4 !== 0) {
                     request = request + ' ';
                 }
                 let requestBytes = atob(request);
-                console.log('requestBytes length %d', requestBytes.length);                            
-
-                writeChannel.writeWithResponse(requestBytes).then( (responce: Characteristic) => {
-                    resolve(responce.value);
+                console.log('requestBytes length %d', requestBytes.length);
+                // for(let i = 0; i < 10; i++) {
+                //     console.log('byte %d = 0x%s', i, String.fromCharCode(parseInt(requestBytes.substring(i,1)) , 8));
+                // }
+                // let requestBytes = [ 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x00 ];
+                console.log('requestBytes %s', requestBytes);
+                writeChannel.writeWithResponse(requestBytes).then( (response: Characteristic) => {
+                    console.log('got a response %s', response);1
+                    resolve(btoa(response.value));
                 });
             }
-        });        
+        });
     });
 };
 

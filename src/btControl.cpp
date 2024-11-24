@@ -42,15 +42,23 @@ void btControlListen() {
   if(dataReady > 0) {
     Serial.print("BT data ready ");
     Serial.println(dataReady, DEC);
-    std::string data = pWriteCharacteristic->getValue();
+    // std::string data = pWriteCharacteristic->getValue();
+    uint8_t *data = pWriteCharacteristic->getData();
 
     // uint32_t int_val = (uint32_t) data.c_str();
-    Serial.print("Data received ");
-    Serial.println(data.length(), DEC);
+    Serial.print("Data received length ");
+    Serial.println(dataReady, DEC);
 
+
+    Serial.print("Data ");
+    for(int i = 0; i < dataReady; i++) {
+      Serial.print(data[i], HEX);
+    }
+    Serial.println("");
+    pWriteCharacteristic->setValue("");
     // Do something based on what the Read was
     // Reply with "Hello"
-    byte response[] = { 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x00 };
-    pReadCharacteristic->setValue(response, 6);
+    // byte response[] = { 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x00 };
+    // pReadCharacteristic->setValue(response, 6);
   }
 }
