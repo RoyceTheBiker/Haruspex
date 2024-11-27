@@ -111,6 +111,8 @@ export PATH=$PATH:$ANDROID_HOME/emulator
 npx expo install react-native-gesture-handler react-native-safe-area-context react-native-reanimated react-native-screens
 
 ## Android Debug Bridge (adb)
+ADB requires that the phone be in developer mode and that ``USB Debugging`` be enabled in `Settings` -> `Developer Options`
+
 List files in Screenshots folder
 ```
 adb shell ls -R "/storage/self/primary/DCIM//Screenshots/"

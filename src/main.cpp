@@ -12,7 +12,7 @@ typedef enum {
   STROBE_DOWN
 } RunMode;
 int StrobeCount = 0;
-int ChangeDelay = 10000;
+int ChangeDelay = 5000;
 RunMode runMode = COUNTER_MODE;
 int strobeCount = 0;
 
@@ -35,7 +35,7 @@ void loop() {
   int changeModeRequest = webServerListen();
   if(changeModeRequest == 1) {
     bankValue = 0;
-    ChangeDelay = 10000;
+    ChangeDelay = 5000;
     runMode = COUNTER_MODE;
     strobeCount = 0;
   }
