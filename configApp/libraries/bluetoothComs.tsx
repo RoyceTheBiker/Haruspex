@@ -1,4 +1,5 @@
 import { BleError, BleManager, Characteristic, Device, Service, State } from "react-native-ble-plx";
+import { Esp32ConfT } from "../models/esp32Conf";
 import Base64 from 'react-native-base64';
 
 let bleManager: BleManager;
@@ -90,6 +91,14 @@ export const connectToDevice = (deviceName: string): Promise<string> => {
 export const getData = (request: string): Promise<string> => {
     console.log('Request: %s', request);
     return new Promise( (resolve) => {
+        let replyConf = {
+            esp32Cdn: 'butterScotchLane',
+            esp32Hostname: 'Little Orphan Candy',
+            esp32PasswdSet: true,
+            esp32SSID: 'Freeman' } as Esp32ConfT;
+
+        let returnMessage = JSON.stringify(replyConf);
+
         bleManager.state().then( (bleState: State) => {
             console.log('BLE State is %s', bleState);
             if(bleState === 'PoweredOn') {
