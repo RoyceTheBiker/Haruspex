@@ -80,17 +80,18 @@ export default function WifiScreen({navitation, route}) {
                         console.log('Message from BTLE %s', message);
                         getData("GET config").then( (responce: string) => {
                             console.log('Got BLE responce %s', responce);
-                            let respJ = JSON.parse(responce) as Esp32ConfT;
-                            setEsp32Hostname(respJ.esp32Hostname);
-                            if(respJ.esp32SSID.length > 0) {
-                                setEsp32SSID(respJ.esp32SSID);
-                            }
-                            setesp32PasswdIsSet(respJ.esp32PasswdSet);
-                            if(respJ.esp32PasswdSet === true) {
-                                setChangePassPlaceholder('change password');
-                            }
-                            setEsp32Cdn(respJ.esp32Cdn);
+                            // let respJ = JSON.parse(responce) as Esp32ConfT;
+                            // setEsp32Hostname(respJ.esp32Hostname);
+                            // if(respJ.esp32SSID.length > 0) {
+                            //     setEsp32SSID(respJ.esp32SSID);
+                            // }
+                            // setesp32PasswdIsSet(respJ.esp32PasswdSet);
+                            // if(respJ.esp32PasswdSet === true) {
+                            //     setChangePassPlaceholder('change password');
+                            // }
+                            // setEsp32Cdn(respJ.esp32Cdn);
                         });
+                        
                     });
                 });
             } else {
