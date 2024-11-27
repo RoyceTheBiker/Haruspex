@@ -59,12 +59,16 @@ Hard resetting via RTS pin...
 ```
 
 ##  2. <a name='configApp'></a>configApp
-An Android app developed using Ract-Native Expo
+An Android app developed using React-Native Expo
 
-First attepmt to use Bluetooth was with [react-native-ble-manager](https://www.npmjs.com/package/react-native-ble-manager) which seems like a great choice with support for Android 4 and newer APIs.
-Unfortunatly it does not seem to be compatible with Expo because it requires setting [AndroidManifest](https://github.com/innoveit/react-native-ble-manager/blob/master/example/plugins/withBLEAndroidManifest.js) that is not supported by Expo, or at least not in this way.
+First attempt to use Bluetooth was with [react-native-ble-manager](https://www.npmjs.com/package/react-native-ble-manager) which seems like a great choice with support for Android 4 and newer APIs.
+Unfortunately it does not seem to be compatible with Expo because it requires setting [AndroidManifest](https://github.com/innoveit/react-native-ble-manager/blob/master/example/plugins/withBLEAndroidManifest.js) that is not supported by Expo, or at least not in this way.
 
 Expo has a different module [react-native-ble-plx](https://expo.dev/blog/how-to-build-a-bluetooth-low-energy-powered-expo-app)
+
+Big thanks to the developers of [Punch Through LightBlue](https://punchthrough.com/lightblue/) app. It made debugging BLE issues much easier.
+
+![Punch Through logo](./frontend/PunchThrough.png)
 
 [Expo Go](https://expo.dev/go) does not support using the Bluetooth hardware but is great for quickly testing screen layout and desgines, it will automatically update with changes live.
 
@@ -72,7 +76,7 @@ Installing packages uses ``npx expo install <package name>``.
 
 Uninstalling packages uses ``npm uninstall <package name>``.
 
-Oriinally tried using ``react-native-ble-manager`` but could not get it to work.
+Originally tried using ``react-native-ble-manager`` but could not get it to work.
 
 ```bash
 npm uninstall react-native-ble-manager
