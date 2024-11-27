@@ -1,0 +1,8 @@
+{
+  "esp32Hostname": "Haruspex ESP32",
+  "esp32SSID": "",
+  "esp32PasswdSet": "false",
+  "esp32Passwd": "",
+  "esp32Cdn": "https://cdn.SiliconTao.com/",
+  "webType": "default"
+}

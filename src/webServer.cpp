@@ -1,5 +1,8 @@
+#include <Arduino.h>
+#include "btControl.h"
 #include "gpioPins.h"
 #include "parameters.h"
+#include <map>
 #include <stdlib.h>
 #include <SPIFFS.h>
 #include <WiFi.h>
@@ -13,20 +16,26 @@ WiFiServer server(80);
 WiFiClient client;
 
 void webServerSetup() {
+
   // initialize LED digital pin as an output.
 
-  char wifiSsid[64];
-  char wifiPass[64];
-  char wifiHost[64];
+  // char wifiSsid[64];
+  // char wifiPass[64];
+  // char wifiHost[64];
+  std::map<std::string, std::string> webConfig;
+  readJsonFile("/webConf.json", &webConfig);
 
-  wifiConfigured &= readValue(secretsFile, "WiFi SSID", wifiSsid) ? true : false;
-  wifiConfigured &= readValue(secretsFile, "WiFi PASS", wifiPass) ? true : false;
-  wifiConfigured &= readValue(secretsFile, "Hostname", wifiHost) ? true : false;
+  btControlSetup(webConfig.at("esp32Hostname"));
+
+  // wifiConfigured &= readValue(secretsFile, "WiFi SSID", wifiSsid) ? true : false;
+  // wifiConfigured &= readValue(secretsFile, "WiFi PASS", wifiPass) ? true : false;
+  // wifiConfigured &= readValue(secretsFile, "Hostname", wifiHost) ? true : false;
   // scanNetworks();
+  if((webConfig.at("esp32SSID").length() > 0) && (webConfig.at("esp32Passwd").length() > 0))
   if(wifiConfigured) {
-    WiFi.setHostname(wifiHost);
+    WiFi.setHostname(webConfig.at("esp32Hostname").c_str());
     WiFi.mode(WIFI_AP_STA);
-    WiFi.begin(wifiSsid, wifiPass);
+    WiFi.begin(webConfig.at("esp32SSID").c_str(), webConfig.at("esp32Passwd").c_str());
     Serial.print("Connecting to WiFi ..");
     while (WiFi.status() != WL_CONNECTED) {
       Serial.print('.');

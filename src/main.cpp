@@ -1,4 +1,3 @@
-#include "btControl.h"
 #include "gpioPins.h"
 #include "webServer.h"
 #include <Arduino.h>
@@ -28,7 +27,6 @@ void setup() {
     Serial.println("SPIFFS is mounted");
   }
   webServerSetup();
-  btControlSetup();
 }
 
 void loop() {
@@ -45,7 +43,7 @@ void loop() {
     runMode = STROBE_UP;
   }
 
-  btControlListen();
+  // btControlListen();
   if(blinkDelay++ > ChangeDelay) {
     blinkDelay = 0;
     switch(runMode) {
