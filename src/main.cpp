@@ -26,6 +26,7 @@ void setup() {
   } else {
     Serial.println("SPIFFS is mounted");
   }
+  Serial.println("Call web setup");
   webServerSetup();
 }
 

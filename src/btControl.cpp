@@ -61,7 +61,7 @@ class CharacteristicCallBack : public BLECharacteristicCallbacks {
     std::string configData = "";
     if(data == "GET config") {
       // Load the config file and send as the reply.
-      readFile("credentials.json", reply);
+      reply = readFile("/webConfig.json");
     }
 
     if(data.find("SET config") == 0) {

@@ -2,19 +2,21 @@
 #include "parameters.h"
 #include <SPIFFS.h>
 
+std::string fileBuffer;
+
 /**
  * readValue
  * Reads a single value from flat config file
  *
  * const char* fileName, name of file to read
  * char* paramName, key name to get value of
- * std::string valueBuffer, buffer to store value in
+ * std::string fileBuffer, buffer to store value in
  *
  * returns number of bytes in the return value
  */
-int readValue(const char* fileName, char* paramName, std::string valueBuffer) {
+int readValue(const char* fileName, char* paramName, std::string fileBuffer) {
   int returnLength = 0;
-  // valueBuffer[0] = 0;
+  // fileBuffer[0] = 0;
   File file = SPIFFS.open(fileName);
   if(!file){
     Serial.println("Failed to open file for reading");
@@ -31,8 +33,8 @@ int readValue(const char* fileName, char* paramName, std::string valueBuffer) {
     lineBuffer[readBytes] = 0;
     String parseLine(lineBuffer);
     if(parseLine.indexOf(paramString) == 0) {
-      parseLine.getBytes((unsigned char*)valueBuffer.c_str(), 64, paramString.length());
-      returnLength = valueBuffer.length();
+      parseLine.getBytes((unsigned char*)fileBuffer.c_str(), 64, paramString.length());
+      returnLength = fileBuffer.length();
     }
   }
   file.close();
@@ -59,15 +61,27 @@ int readJsonFile(const char* fileName, std::map<std::string, std::string>* keysV
     VALUE_SET
   };
 
+  Serial.print("readJsonFile(");
+  Serial.print(fileName);
+  Serial.println(")");
   parseStateT parseState = OUTSIDE_JSON;
   int keyValueCount = 0;
   std::string fileBuffer;
   std::string nextKey = "";
   std::string nextValue = "";
-  if(readFile(fileName, fileBuffer) > 0) {
-    while(fileBuffer.length() > 0) {
-      char nextByte = fileBuffer.c_str()[0];
-      fileBuffer.erase(0, 1);
+  Serial.println("Call readFile");
+  delay(2000);
+  std::string jsonFile = readFile(fileName);
+
+  Serial.println("Came back with a file that is ");
+  Serial.print(jsonFile.length(), DEC);
+  Serial.println(" bytes long");
+  delay(2000);
+
+  if(jsonFile.length() > 0) {
+    while(jsonFile.length() > 0) {
+      char nextByte = jsonFile.c_str()[0];
+      jsonFile.erase(0, 1);
       switch(parseState) {
         case OUTSIDE_JSON: {
           if(nextByte == '{') parseState = INSIDE_ARRAY;
@@ -83,9 +97,11 @@ int readJsonFile(const char* fileName, std::map<std::string, std::string>* keysV
           } else {
             nextKey += nextByte;
           }
+          break;
         }
         case KEY_SET: {
           if(nextByte == '"') parseState = INSIDE_VALUE;
+          break;
         }
         case INSIDE_VALUE: {
           // Escape can add quote to value
@@ -95,6 +111,10 @@ int readJsonFile(const char* fileName, std::map<std::string, std::string>* keysV
           } else {
             if(nextByte == '"') {
               parseState = VALUE_SET;
+              Serial.print("JSON key, value = ");
+              Serial.print(nextKey.c_str());
+              Serial.print(", ");
+              Serial.println(nextValue.c_str());
               keysValues->insert( {nextKey.c_str(), nextValue.c_str() });
               nextKey = "";
               nextValue = "";
@@ -122,24 +142,34 @@ int readJsonFile(const char* fileName, std::map<std::string, std::string>* keysV
  * Reads the entire content of the file on the partition.
  *
  * const char* fileName, name of file to read
- * std::string valueBuffer, string to contain the file content
+ * std::string fileBuffer, string to contain the file content
  *
  * return number of bytes read from file
  */
-int readFile(const char* fileName, std::string valueBuffer) {
-  int returnLength = 0;
+std::string readFile(const char* fileName) {
   File file = SPIFFS.open(fileName);
   if(!file){
     Serial.println("Failed to open file for reading");
     return(0);
   }
 
-  std::string returnBuffer;
   if(file.available()) {
-    int readBytes = file.readBytes((char *)returnBuffer.c_str(), 1024);
+    Serial.println("About to read bytes into string");
+    char lineBuffer[128];
+    while(file.available()) {
+      int readBytes = file.readBytesUntil('\n', lineBuffer, 128);
+      Serial.print("Bytes read ");
+      Serial.println(readBytes, DEC);
+      lineBuffer[readBytes] = 0;
+      fileBuffer += lineBuffer;
+    }
+    Serial.println("Are we good now?");
+    Serial.print("Buffer length ");
+    Serial.println(fileBuffer.length(), DEC);
+    Serial.println(fileBuffer.c_str());
   }
   file.close();
-  return(returnLength);
+  return(fileBuffer);
 }
 
 

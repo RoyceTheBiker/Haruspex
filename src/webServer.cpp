@@ -22,7 +22,11 @@ void webServerSetup() {
   // char wifiSsid[64];
   // char wifiPass[64];
   // char wifiHost[64];
+  Serial.println("make webConf map");
+  delay(2000);
   std::map<std::string, std::string> webConfig;
+
+  Serial.println("Call readJsonFile");
   readJsonFile("/webConf.json", &webConfig);
 
   btControlSetup(webConfig.at("esp32Hostname"));
