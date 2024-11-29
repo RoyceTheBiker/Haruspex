@@ -70,33 +70,17 @@ export const connectToDevice = (deviceName: string): Promise<string> => {
     });
 }
 
-// const incomingMessage = (error: BleError | null, charactoristic: Characteristic | null) => {
-//     if(error) {
-//         console.error(error.message);
-//         return;
-//     }
-//     if(!charactoristic?.value) {
-//         console.error('No data');
-//         return;
-//     }
-//     console.log('Data %s', Base64.decode(charactoristic.value));
-// }
-
-// const setupMonitoring = async (device: Device) => {
-//     if(device) {
-//         console.log('setupMonitoring');
-//         device.monitorCharacteristicForService(ServiceUUID, ReadFromESP32, incomingMessage);
-//     }
-// }
-
 export const getData = (request: string): Promise<string> => {
     console.log('Request: %s', request);
     return new Promise( (resolve) => {
         let replyConf = {
-            esp32Cdn: 'butterScotchLane',
             esp32Hostname: 'Little Orphan Candy',
             esp32PasswdSet: true,
-            esp32SSID: 'Freeman' } as Esp32ConfT;
+            esp32SSID: 'Freeman',
+            esp32Passwd: '',
+            esp32Cdn: '',
+            webType: '',
+            ipAddress: '' } as Esp32ConfT;
 
         let returnMessage = JSON.stringify(replyConf);
 
@@ -107,67 +91,25 @@ export const getData = (request: string): Promise<string> => {
                 console.log('request %s', request);
         
                 let requestB64 = Base64.encode(request);
-                // console.log('requestB64 length %d', requestB64.length);
-                // console.log('requestB64 %s', requestB64);
-                
-                // This does not get the response message
-                // writeChannel.writeWithResponse(requestB64).then( (response: Characteristic) => {                    
-                //     response.monitor( (err: BleError, charactoristic: Characteristic) => {
-                //         if(err) {
-                //             console.error(err.message);
-                //         } else {
-                //             console.log('characteristic value %s', Base64.decode(charactoristic.value));
-                //             resolve(Base64.decode(charactoristic.value));
-                //         }
-                //     });
-                // }).catch( (err) => {
-                //     console.error('response %s', err.message);
-                // });
-
                 writeChannel.writeWithoutResponse(requestB64).then( (response: Characteristic) => {
                     response.monitor( (err: BleError, charactoristic: Characteristic) => {
                         if(err) {
                             console.error(err.message);
                         } else {
                             // console.log("charactoristic %s", JSON.stringify(charactoristic));
-                            console.log('characteristic value %s', Base64.decode(charactoristic.value));
-                            resolve(Base64.decode(charactoristic.value));
+                            let messageString = "" + Base64.decode(charactoristic.value);
+                            console.log('characteristic value %s', messageString);
+                            let objMsg = JSON.parse(messageString);
+                            Object.keys(objMsg).forEach( (cVkey) => {
+                                // replyConf[cV] = 
+                                console.log('what is this %s', cVkey);
+                            })
+                            resolve(messageString);
                         }
                     });
                 }).catch( (err) => {
                     console.error('response %s', err.message);
                 });
-
-                // This does not get the response message
-                // btDevice.writeCharacteristicWithResponseForService(ServiceUUID, WriteToESP32, requestB64).then( (response: Characteristic) => {
-                //     // console.log('got a response from %s', response.uuid);
-                //     // console.log('got a response %s', Base64.decode(response.value));
-                //     response.monitor( (err: BleError, charactoristic: Characteristic) => {
-                //         if(err) {
-                //             console.error(err.message);
-                //         } else {
-                //             console.log('characteristic value %s', Base64.decode(charactoristic.value));
-                //         }
-                //     });
-                // }).catch( (err) => {
-                //     console.error(err.message);
-                // });
-
-                // This gets a response that will get the response message as the next block of text after the send message.
-                // bleManager.writeCharacteristicWithoutResponseForDevice(btDevice.id, ServiceUUID, WriteToESP32, requestB64)
-                //         .then( (response: Characteristic) => {
-                //     // console.log('got a response from %s', response.uuid);
-                //     // console.log('got a response %s', Base64.decode(response.value));
-                //     response.monitor( (err: BleError, charactoristic: Characteristic) => {
-                //         if(err) {
-                //             console.error(err.message);
-                //         } else {
-                //             console.log('characteristic value %s', Base64.decode(charactoristic.value));
-                //         }
-                //     });                    
-                // }).catch( (err) => {
-                //     console.error(err.message);
-                // });
             } else {
                 resolve('Device is powered off');
             }
