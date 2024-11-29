@@ -1,4 +1,4 @@
-import { BleError, BleManager, Characteristic, Device, Service, State } from "react-native-ble-plx";
+import { BleError, BleManager, Characteristic, Device, LogLevel, Service, State } from "react-native-ble-plx";
 import { Esp32ConfT } from "../models/esp32Conf";
 import Base64 from 'react-native-base64';
 
@@ -17,6 +17,7 @@ export const initBluetooth = (connectDevice: string): Promise<string> => {
         if(!bleManager) {
             bleManager = new BleManager();
             if(bleManager) {
+                bleManager.setLogLevel(LogLevel.Verbose);
                 bleManager.startDeviceScan(null, null, (error, device) => {
                     if (error) {
                         console.log('Device scan error %s', error.message);
@@ -128,7 +129,8 @@ export const getData = (request: string): Promise<string> => {
                         if(err) {
                             console.error(err.message);
                         } else {
-                            // console.log('characteristic value %s', Base64.decode(charactoristic.value));
+                            // console.log("charactoristic %s", JSON.stringify(charactoristic));
+                            console.log('characteristic value %s', Base64.decode(charactoristic.value));
                             resolve(Base64.decode(charactoristic.value));
                         }
                     });
