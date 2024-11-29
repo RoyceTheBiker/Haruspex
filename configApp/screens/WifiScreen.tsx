@@ -16,11 +16,12 @@ type WlanT = {
 export default function WifiScreen({navitation, route}) {
     const [wifiSsids, setWifiSsids] = useState<WlanT[]>([]);
     const [defaultSSID, setDefaultSSID] = useState('');
+    const [webType, setWebType] = useState('');
     const [esp32Hostname, setEsp32Hostname] = useState(route.params.name);
     const [esp32SSID, setEsp32SSID] = useState<string>();
     const [esp32PasswdIsSet, setesp32PasswdIsSet] = useState(false);
     const [esp32NewPasswd, setEsp32NewPasswd] = useState('');
-    const [esp32Cdn, setEsp32Cdn] = useState('https://cdn.SiliconTao.com');
+    const [esp32Cdn, setEsp32Cdn] = useState('http://localhost:8081');
     const [changePassPlaceholder, setChangePassPlaceholder] = useState('password');
     const [selectedSSID, setSelectedSSID] = useState('');
 
@@ -58,6 +59,7 @@ export default function WifiScreen({navitation, route}) {
         });
     };
 
+
     // This page is constantly refreshing causing the Wi-Fi scan to run many, many times.
     // It slows down the program when the scan is constanly being ran.
     // This only runs the scan if there are no VLANs in the list.
@@ -78,18 +80,19 @@ export default function WifiScreen({navitation, route}) {
                     console.log('BT message %s', message);
                     connectToDevice(esp32Hostname).then( (message: string) => {
                         console.log('Message from BTLE %s', message);
-                        getData("GET config").then( (responce: string) => {
-                            console.log('Got BLE responce %s', responce);
-                            // let respJ = JSON.parse(responce) as Esp32ConfT;
-                            // setEsp32Hostname(respJ.esp32Hostname);
-                            // if(respJ.esp32SSID.length > 0) {
-                            //     setEsp32SSID(respJ.esp32SSID);
-                            // }
-                            // setesp32PasswdIsSet(respJ.esp32PasswdSet);
-                            // if(respJ.esp32PasswdSet === true) {
-                            //     setChangePassPlaceholder('change password');
-                            // }
-                            // setEsp32Cdn(respJ.esp32Cdn);
+                        getData("GET config").then( (response: Esp32ConfT) => {
+                            console.log('Got BLE responce');
+                            // let respJ = JSON.parse(response) as Esp32ConfT;
+                            setEsp32Hostname(response.esp32Hostname);
+                            if(response.esp32SSID.length > 0) {
+                                setEsp32SSID(response.esp32SSID);
+                            }
+                            setesp32PasswdIsSet(response.esp32PasswdSet);
+                            if(response.esp32PasswdSet === true) {
+                                setChangePassPlaceholder('change password');
+                            }
+                            setEsp32Cdn(response.esp32Cdn);
+                            setWebType(response.webType);
                         });
                         
                     });
@@ -113,7 +116,7 @@ export default function WifiScreen({navitation, route}) {
                         <Text style={styles.legend}>Hostname</Text>
                         <TextInput
                         style={styles.input}
-                        // onChangeText={onChangeText}
+                        onChangeText={setEsp32Hostname}
                         value={esp32Hostname}          
                         />
                     </View>
@@ -129,14 +132,15 @@ export default function WifiScreen({navitation, route}) {
                             labelField="label" 
                             value={selectedSSID} 
                             valueField="label"
-                            onChange={(item) => alert('select ' + item.label)}/>
+                            onChange={(item) => setEsp32SSID(item.label)}
+                            />
                     </View>
                 
                     <View style={styles.fieldSet}>
                         <Text style={styles.legend}>Wi-Fi Password</Text>
                         <TextInput
                         style={styles.input}
-                        // onChangeText={onChangeText}
+                        onChangeText={setEsp32NewPasswd}
                         secureTextEntry={true}
                         placeholder={changePassPlaceholder} 
                         value={esp32NewPasswd}         
@@ -147,8 +151,17 @@ export default function WifiScreen({navitation, route}) {
                         <Text style={styles.legend}>CDN URL</Text>
                         <TextInput
                         style={styles.input}
-                        // onChangeText={onChangeText}            
+                        onChangeText={setEsp32Cdn}            
                         value={esp32Cdn}
+                        />
+                    </View>
+                
+                    <View style={styles.fieldSet}>
+                        <Text style={styles.legend}>Web Type</Text>
+                        <TextInput
+                        style={styles.input}
+                        onChangeText={setWebType}            
+                        value={webType}
                         />
                     </View>
 

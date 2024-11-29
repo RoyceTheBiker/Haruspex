@@ -70,16 +70,16 @@ export const connectToDevice = (deviceName: string): Promise<string> => {
     });
 }
 
-export const getData = (request: string): Promise<string> => {
+export const getData = (request: string): Promise<Esp32ConfT> => {
     console.log('Request: %s', request);
     return new Promise( (resolve) => {
         let replyConf = {
-            esp32Hostname: 'Little Orphan Candy',
+            esp32Hostname: 'HardwareIsOff',
             esp32PasswdSet: true,
-            esp32SSID: 'Freeman',
+            esp32SSID: 'HardwareIsOff',
             esp32Passwd: '',
-            esp32Cdn: '',
-            webType: '',
+            esp32Cdn: 'HardwareIsOff',
+            webType: 'HardwareIsOff',
             ipAddress: '' } as Esp32ConfT;
 
         let returnMessage = JSON.stringify(replyConf);
@@ -87,8 +87,7 @@ export const getData = (request: string): Promise<string> => {
         bleManager.state().then( (bleState: State) => {
             console.log('BLE State is %s', bleState);
             if(bleState === 'PoweredOn') {
-                console.log('Sending message to %s', writeChannel.uuid);
-                console.log('request %s', request);
+                console.log('Sending message to %s requesting %s', writeChannel.uuid, request);
         
                 let requestB64 = Base64.encode(request);
                 writeChannel.writeWithoutResponse(requestB64).then( (response: Characteristic) => {
@@ -101,17 +100,16 @@ export const getData = (request: string): Promise<string> => {
                             console.log('characteristic value %s', messageString);
                             let objMsg = JSON.parse(messageString);
                             Object.keys(objMsg).forEach( (cVkey) => {
-                                // replyConf[cV] = 
-                                console.log('what is this %s', cVkey);
+                                replyConf[cVkey] = objMsg[cVkey];
                             })
-                            resolve(messageString);
+                            resolve(replyConf);
                         }
                     });
                 }).catch( (err) => {
                     console.error('response %s', err.message);
                 });
             } else {
-                resolve('Device is powered off');
+                resolve(replyConf);
             }
         });
     });
@@ -119,7 +117,7 @@ export const getData = (request: string): Promise<string> => {
 
 export const putData = (request: object): Promise<string> => {
     return new Promise( (resolve, reject) => {
-        // btdevice send request, get a responce
+        // btdevice send request, get a response
     });
 };
 
