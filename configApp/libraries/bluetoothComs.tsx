@@ -38,7 +38,7 @@ export const connectToDevice = (deviceName: string): Promise<string> => {
     console.log('Connecting to BT device %s', deviceName);
     return new Promise( (resolve) => {
         console.log('Call connect');
-        btDevice.connect().then( (device: Device) => {
+        btDevice.connect({requestMTU: 517}).then( (device: Device) => {
             console.log('Discovering characteristics');
             return device.discoverAllServicesAndCharacteristics();
         }).then( (device: Device) => {
