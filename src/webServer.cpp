@@ -11,46 +11,38 @@ int flashSpeed = 1000;
 char buffer[64];
 bool wifiConfigured = true;
 const char secretsFile[] = "/secrets.txt";
-void scanNetworks();
 WiFiServer server(80);
 WiFiClient client;
+std::map<std::string, std::string>* webConfig;
 
 void webServerSetup() {
-
-  // initialize LED digital pin as an output.
-
-  // char wifiSsid[64];
-  // char wifiPass[64];
-  // char wifiHost[64];
-  Serial.println("make webConf map");
-  delay(2000);
-  std::map<std::string, std::string> webConfig;
+  webConfig = new std::map<std::string, std::string>;
 
   Serial.println("Call readJsonFile");
-  readJsonFile("/webConf.json", &webConfig);
+  readJsonFile("/webConf.json", webConfig);
 
-  btControlSetup(webConfig.at("esp32Hostname"));
-
-  // wifiConfigured &= readValue(secretsFile, "WiFi SSID", wifiSsid) ? true : false;
-  // wifiConfigured &= readValue(secretsFile, "WiFi PASS", wifiPass) ? true : false;
-  // wifiConfigured &= readValue(secretsFile, "Hostname", wifiHost) ? true : false;
-  // scanNetworks();
-  if((webConfig.at("esp32SSID").length() > 0) && (webConfig.at("esp32Passwd").length() > 0))
-  if(wifiConfigured) {
-    WiFi.setHostname(webConfig.at("esp32Hostname").c_str());
+  if((webConfig->at("esp32SSID").length() > 0) && (webConfig->at("esp32Passwd").length() > 0)) {
+    webConfig->at("esp32PasswdSet") = "true";
+    WiFi.setHostname(webConfig->at("esp32Hostname").c_str());
     WiFi.mode(WIFI_AP_STA);
-    WiFi.begin(webConfig.at("esp32SSID").c_str(), webConfig.at("esp32Passwd").c_str());
+    WiFi.begin(webConfig->at("esp32SSID").c_str(), webConfig->at("esp32Passwd").c_str());
     Serial.print("Connecting to WiFi ..");
     while (WiFi.status() != WL_CONNECTED) {
       Serial.print('.');
       delay(1000);
     }
+    webConfig->at("ipAddress") = WiFi.localIP();
     Serial.println(WiFi.localIP());
     Serial.print("RRSI: ");
     Serial.println(WiFi.RSSI());
 
     server.begin();
   }
+  // We use the password to connect to Wi-Fi but must never send it over Bluetooth.
+  // esp32PasswdSet is true if the password is set
+  // ipAddress is not blank if SSID and password can connect to Wi-Fi
+  webConfig->at("esp32Passwd") = "";
+  btControlSetup(webConfig);
 }
 
 int webServerListen() {

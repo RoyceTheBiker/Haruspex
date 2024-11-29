@@ -4,5 +4,6 @@
   "esp32PasswdSet": "false",
   "esp32Passwd": "",
   "esp32Cdn": "https://cdn.SiliconTao.com/",
-  "webType": "default"
+  "webType": "default",
+  "ipAddress": ""
 }

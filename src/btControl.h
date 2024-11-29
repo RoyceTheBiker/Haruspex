@@ -1,2 +1,4 @@
-void btControlSetup(std::string deviceHostname);
+#include <map>
+
+void btControlSetup(std::map<std::string, std::string>* webConfig);
 void btControlListen();

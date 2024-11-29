@@ -1,9 +1,7 @@
 
 #include <Arduino.h>
 #include <BLEDevice.h>
-// #include <BLEUtils.h>
 #include <BLEServer.h>
-// #include <BLE2902.h>
 #include "./parameters.h"
 
 // BluetoothSerial SerialBT;
@@ -15,8 +13,10 @@ BLEServer *pServer = NULL;
 BLEService *pService = NULL;
 BLECharacteristic *pWriteCharacteristic = NULL;
 BLEAdvertising *pAdvertising = NULL;
-
 boolean pearConnected = false;
+std::string requestMessage;
+
+std::map<std::string, std::string>* webConf;
 
 void startService() {
   pAdvertising = BLEDevice::getAdvertising();
@@ -24,7 +24,6 @@ void startService() {
   pAdvertising->setScanResponse(true);
   pAdvertising->setMinPreferred(0x06);
   pAdvertising->setMinPreferred(0x12);
-  // pAdvertising->setMaxInterval(1500);
 
   BLEDevice::startAdvertising();
   Serial.println("Characteristic defined");
@@ -33,22 +32,16 @@ void startService() {
 class ServerCallbacks: public BLEServerCallbacks {
   void onConnect(BLEServer* pServer) {
     Serial.println("Device connected");
-    // pServer->getPeerDevices(true);
     pearConnected = true;
   };
 
   void onDisconnect(BLEServer* pServer) {
     pearConnected = false;
     Serial.println("Device disconnected");
-    // pService->stop();
-
-    // pService->start();
     pAdvertising->stop();
     startService();
   }
 };
-
-std::string requestMessage;
 
 class CharacteristicCallBack : public BLECharacteristicCallbacks {
   public: void onWrite(BLECharacteristic *characteristic_) override {
@@ -61,7 +54,13 @@ class CharacteristicCallBack : public BLECharacteristicCallbacks {
     std::string configData = "";
     if(data == "GET config") {
       // Load the config file and send as the reply.
-      reply = readFile("/webConfig.json");
+      reply = "{";
+      for(std::map<std::string, std::string>::iterator wC = webConf->begin(); wC != webConf->end(); wC++) {
+        if(wC->first != "esp32Passwd" ) {
+          reply += "\"" + wC->first + "\": \"" + wC->second + "\",";
+        }
+      }
+      reply += "}";
     }
 
     if(data.find("SET config") == 0) {
@@ -73,12 +72,13 @@ class CharacteristicCallBack : public BLECharacteristicCallbacks {
   }
 };
 
-void btControlSetup(std::string deviceHostname) {
+void btControlSetup(std::map<std::string, std::string>* givenWebConfig) {
+  webConf = givenWebConfig;
   Serial.print("btControlSetup(");
-  Serial.print(deviceHostname.c_str());
+  Serial.print(webConf->at("esp32Hostname").c_str());
   Serial.println(")");
 
-  BLEDevice::init(deviceHostname.c_str());
+  BLEDevice::init(webConf->at("esp32Hostname").c_str());
   pServer = BLEDevice::createServer();
   pServer->setCallbacks(new ServerCallbacks());
 
@@ -93,24 +93,5 @@ void btControlSetup(std::string deviceHostname) {
   startService();
 }
 
-int checkCount = 0;
 void btControlListen() {
-
-  // If client reboots without sending a disconnect this count stays at 1
-  if(checkCount++ > 500000) {
-    std::map<uint16_t, conn_status_t> pDs = pServer->getPeerDevices(true);
-    Serial.println("");
-    Serial.print("Connected peers ");
-    Serial.println(pDs.size(), DEC);
-    checkCount = 0;
-    for( auto const& pD: pDs) {
-      Serial.print("Connected ");
-      Serial.println(pD.second.connected ? "true" : "false");
-      // This does not actually force the disconnect.
-      // if(pearConnected == false) {
-      //   Serial.println("Force disconnect");
-      //   pServer->disconnect(pD.first);
-      // }
-    }
-  }
 }
