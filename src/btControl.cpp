@@ -55,9 +55,12 @@ class CharacteristicCallBack : public BLECharacteristicCallbacks {
     if(data == "GET config") {
       // Load the config file and send as the reply.
       reply = "{";
+      bool firstItter = true;
       for(std::map<std::string, std::string>::iterator wC = webConf->begin(); wC != webConf->end(); wC++) {
-        if(wC->first != "esp32Passwd" ) {
-          reply += "\"" + wC->first + "\": \"" + wC->second + "\",";
+        if((wC->first != "esp32Passwd") && (wC->second.size() > 0)) {
+          if(firstItter == false) reply += ",";
+          reply += "\"" + wC->first + "\": \"" + wC->second + "\"";
+          firstItter = false;
         }
       }
       reply += "}";
