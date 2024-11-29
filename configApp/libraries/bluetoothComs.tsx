@@ -115,9 +115,23 @@ export const getData = (request: string): Promise<Esp32ConfT> => {
     });
 };
 
-export const putData = (request: object): Promise<string> => {
+export const putData = (request: string): Promise<string> => {
     return new Promise( (resolve, reject) => {
         // btdevice send request, get a response
+        bleManager.state().then( (bleState: State) => {
+            console.log('BLE State is %s', bleState);
+            if(bleState === 'PoweredOn') {
+                console.log('Sending message to %s requesting %s', writeChannel.uuid, request);
+                let requestB64 = Base64.encode(request);
+                writeChannel.writeWithoutResponse(requestB64).then( () => {
+                    resolve('Sent');
+                }).catch( (err) => {
+                    console.error('response %s', err.message);
+                });
+            } else {
+                resolve('Not sent');
+            }
+        });
     });
 };
 

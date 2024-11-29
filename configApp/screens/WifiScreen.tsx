@@ -4,7 +4,7 @@ import { styles } from '../styles/globalStyles';
 import { Alert, ImageBackground, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import WifiManager from 'react-native-wifi-reborn';
 import { Asset } from 'expo-asset';
-import { initBluetooth, getData, connectToDevice } from '../libraries/bluetoothComs';
+import { connectToDevice, getData, initBluetooth, putData } from '../libraries/bluetoothComs';
 import { Esp32ConfT } from '../models/esp32Conf';
 
 type WlanT = {
@@ -25,6 +25,19 @@ export default function WifiScreen({navitation, route}) {
     const [changePassPlaceholder, setChangePassPlaceholder] = useState('password');
     const [selectedSSID, setSelectedSSID] = useState('');
     const [ipAddress, setIpAddress] = useState('');
+
+    const saveSettings = () => {
+        console.log('saveSettings');
+        let newConfig = '{ "esp32Hostname": "' + esp32Hostname + '"';
+        if(esp32SSID && esp32NewPasswd) {
+            newConfig += ', "esp32SSID": "' + esp32SSID + '", ';
+            newConfig += '"esp32NewPasswd": "' + esp32NewPasswd + '"';
+        }
+        newConfig += ', "webType": "' + webType + '"';
+        newConfig += ', "esp32Cdn": "' + esp32Cdn + '"';
+        newConfig += '}';
+        putData('PUT config ' + newConfig);
+    }
 
     const isDuplicte = (wlans: WlanT[], nextWlan: string) =>
         wlans.findIndex((wlan) => nextWlan === wlan.label) > -1;
@@ -171,13 +184,13 @@ export default function WifiScreen({navitation, route}) {
 
                     <View style={styles.row}>
                         <TouchableOpacity style={styles.button} activeOpacity={5}>
-                            <Text onPress={() => Alert.alert('Saved')}>
+                            <Text onPress={() => saveSettings()}>
                             Save Settings
                             </Text>
                         </TouchableOpacity>
                         {ipAddress &&
                         <TouchableOpacity style={styles.openButton} activeOpacity={5}>
-                            <Text onPress={() => Alert.alert('Go open')}>
+                            <Text onPress={() => Alert.alert('Go open ' + ipAddress)}>
                             Open
                             </Text>
                         </TouchableOpacity> }
