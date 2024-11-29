@@ -52,6 +52,26 @@ int readValue(const char* fileName, char* paramName, std::string fileBuffer) {
  * return number of [key, value] pairs read from JSON file
  */
 int readJsonFile(const char* fileName, std::map<std::string, std::string>* keysValues) {
+
+  Serial.print("readJsonFile(");
+  Serial.print(fileName);
+  Serial.println(")");
+  Serial.println("Call readFile");
+  std::string jsonFile = readFile(fileName);
+
+  Serial.println("Came back with a file that is ");
+  Serial.print(jsonFile.length(), DEC);
+  Serial.println(" bytes long");
+
+  return stringToMap(jsonFile, keysValues);
+}
+
+int stringToMap(std::string jsonString, std::map<std::string, std::string>* jsonData) {
+  int keyValueCount = 0;
+  std::string fileBuffer;
+  std::string nextKey = "";
+  std::string nextValue = "";
+
   enum parseStateT {
     OUTSIDE_JSON,
     INSIDE_ARRAY,
@@ -60,28 +80,12 @@ int readJsonFile(const char* fileName, std::map<std::string, std::string>* keysV
     INSIDE_VALUE,
     VALUE_SET
   };
-
-  Serial.print("readJsonFile(");
-  Serial.print(fileName);
-  Serial.println(")");
   parseStateT parseState = OUTSIDE_JSON;
-  int keyValueCount = 0;
-  std::string fileBuffer;
-  std::string nextKey = "";
-  std::string nextValue = "";
-  Serial.println("Call readFile");
-  delay(2000);
-  std::string jsonFile = readFile(fileName);
 
-  Serial.println("Came back with a file that is ");
-  Serial.print(jsonFile.length(), DEC);
-  Serial.println(" bytes long");
-  delay(2000);
-
-  if(jsonFile.length() > 0) {
-    while(jsonFile.length() > 0) {
-      char nextByte = jsonFile.c_str()[0];
-      jsonFile.erase(0, 1);
+  if(jsonString.length() > 0) {
+    while(jsonString.length() > 0) {
+      char nextByte = jsonString.c_str()[0];
+      jsonString.erase(0, 1);
       switch(parseState) {
         case OUTSIDE_JSON: {
           if(nextByte == '{') parseState = INSIDE_ARRAY;
@@ -115,7 +119,7 @@ int readJsonFile(const char* fileName, std::map<std::string, std::string>* keysV
               Serial.print(nextKey.c_str());
               Serial.print(", ");
               Serial.println(nextValue.c_str());
-              keysValues->insert( {nextKey.c_str(), nextValue.c_str() });
+              jsonData->insert( {nextKey.c_str(), nextValue.c_str() });
               nextKey = "";
               nextValue = "";
             } else {
@@ -172,7 +176,31 @@ std::string readFile(const char* fileName) {
   return(fileBuffer);
 }
 
+void writeFile(const char* fileName, std::map<std::string, std::string>* jsonData) {
+  Serial.println("");
+  Serial.println("writeFile");
+  File file = SPIFFS.open(fileName, FILE_WRITE);
+  if(!file){
+    Serial.println("Failed to open file for writing");
+    return;
+  }
 
-// int writeValue(const char* fileName, char* paramName, char *paramValue) {
-//   return(0);
-// }
+  std::string writeData = "{\n";
+
+  bool firstIter = true;
+  for(std::map<std::string, std::string>::iterator jD = jsonData->begin(); jD != jsonData->end(); jD++) {
+    if(firstIter == false) writeData += ",\n";
+    writeData += "\"" + jD->first + "\": \"" + jD->second + "\"";
+    firstIter = false;
+  }
+
+  writeData += "\n}";
+  Serial.println(writeData.c_str());
+  if(file.available()) {
+    file.print(writeData.c_str());
+    Serial.println("File was written");
+  }
+
+  file.close();
+  ESP.restart();
+}

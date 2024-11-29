@@ -55,20 +55,41 @@ class CharacteristicCallBack : public BLECharacteristicCallbacks {
     if(data == "GET config") {
       // Load the config file and send as the reply.
       reply = "{";
-      bool firstItter = true;
+      bool firstIter = true;
       for(std::map<std::string, std::string>::iterator wC = webConf->begin(); wC != webConf->end(); wC++) {
         if((wC->first != "esp32Passwd") && (wC->second.size() > 0)) {
-          if(firstItter == false) reply += ",";
+          if(firstIter == false) reply += ",";
           reply += "\"" + wC->first + "\": \"" + wC->second + "\"";
-          firstItter = false;
+          firstIter = false;
         }
       }
       reply += "}";
     }
 
-    if(data.find("SET config") == 0) {
+    if(data.find("PUT config") == 0) {
+      readJsonFile("/webConf.json", webConf);
+      Serial.println("----------------------------------------------");
+      Serial.println("|               Save file                    |");
+      Serial.println("----------------------------------------------");
       // Save the data to the config file.
-      reply = "Data saved";
+      std::map<std::string, std::string>* newConf = new std::map<std::string, std::string>;
+      stringToMap(data.c_str() + 10, newConf);
+
+      for(std::map<std::string, std::string>::iterator nC = newConf->begin(); nC != newConf->end(); nC++) {
+        Serial.print("Copy map key value ");
+        Serial.print(nC->first.c_str());
+        Serial.print(" = ");
+        Serial.println(nC->second.c_str());
+        if(nC->first == "esp32NewPasswd") {
+          Serial.println("Setting password");
+          webConf->at("esp32Passwd") = nC->second;
+          webConf->at("esp32PasswdSet") = "true";
+        } else {
+          webConf->at(nC->first) = nC->second;
+        }
+      }
+      writeFile("/webConf.json", webConf);
+      reply = "{ \"message\": \"Data saved\" }";
     }
     characteristic_->setValue((char *)reply.c_str());
     characteristic_->notify();
