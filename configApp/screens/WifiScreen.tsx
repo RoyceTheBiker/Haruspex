@@ -36,7 +36,11 @@ export default function WifiScreen({navitation, route}) {
         newConfig += ', "webType": "' + webType + '"';
         newConfig += ', "esp32Cdn": "' + esp32Cdn + '"';
         newConfig += '}';
-        putData('PUT config ' + newConfig);
+        putData('PUT config ' + newConfig).then( (response: Esp32ConfT) => {
+            if(response.message) {
+                console.log('Got a response message %s', response.message);
+            }
+        });
     }
 
     const isDuplicte = (wlans: WlanT[], nextWlan: string) =>
@@ -44,27 +48,22 @@ export default function WifiScreen({navitation, route}) {
     let ssidCount = 0;
 
     const getWifiList = async() => {
-        // let isWifiEnabled = await WifiManager.isEnabled;
-        // if(isWifiEnabled) {
-        //     console.log('wifi is enabled');
-        // } else {
-        //     console.log('wifi seems to be off');
-        // }
+        if(await WifiManager.isEnabled) {
+            console.log('wifi is enabled');
+        } else {
+            console.log('wifi seems to be off');
+        }
         let wlanId = 0;
         await WifiManager.loadWifiList().then( (wlans) => {
             wlans.map( (wL) => {
                 setWifiSsids((prevState: WlanT[]) => {
                     if ((!isDuplicte(prevState, wL.SSID)) && (wL.SSID.indexOf('(hidden SSID)') < 0) ) {
-                        // console.log('Found device %s', wL.SSID);
-                        // console.log('esp32SSID is %s', esp32SSID);
-                        // console.log('default is %s', defaultSSID);
                         let newEntry = {
                             id: ssidCount++, 
                             label: wL.SSID,
                             current: wL.SSID === (esp32SSID ? esp32SSID : defaultSSID) ? true : false
                         } as WlanT;
                         setSelectedSSID(esp32SSID ? esp32SSID : defaultSSID);
-                        // console.log('New WlanT %s', JSON.stringify(newEntry));
                         return [...prevState, newEntry];
                     }
                     return prevState;
@@ -78,8 +77,6 @@ export default function WifiScreen({navitation, route}) {
     // It slows down the program when the scan is constanly being ran.
     // This only runs the scan if there are no VLANs in the list.
     if(wifiSsids.length === 0) {
-        
-
         if(!defaultSSID) {
             WifiManager.getCurrentWifiSSID().then( (ssid) => {
                 // console.log('Default %s', ssid);
@@ -96,7 +93,6 @@ export default function WifiScreen({navitation, route}) {
                         console.log('Message from BTLE %s', message);
                         getData("GET config").then( (response: Esp32ConfT) => {
                             console.log('Got BLE responce');
-                            // let respJ = JSON.parse(response) as Esp32ConfT;
                             setEsp32Hostname(response.esp32Hostname);
                             if(response.esp32SSID.length > 0) {
                                 setEsp32SSID(response.esp32SSID);
@@ -107,8 +103,7 @@ export default function WifiScreen({navitation, route}) {
                             }
                             setEsp32Cdn(response.esp32Cdn);
                             setWebType(response.webType);
-                            // setIpAddress(response.ipAddress);
-                            setIpAddress('192.168.0.3');
+                            setIpAddress(response.ipAddress);                            
                         });
                         
                     });

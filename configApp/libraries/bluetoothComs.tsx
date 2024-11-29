@@ -41,6 +41,8 @@ export const connectToDevice = (deviceName: string): Promise<string> => {
         btDevice.connect({requestMTU: 517}).then( (device: Device) => {
             console.log('Discovering characteristics');
             return device.discoverAllServicesAndCharacteristics();
+        }).catch( (err) => {
+            console.error('Connet failed %s', err.message);
         }).then( (device: Device) => {
             console.log('charactoristics discovered');
             return device.services();
@@ -115,7 +117,7 @@ export const getData = (request: string): Promise<Esp32ConfT> => {
     });
 };
 
-export const putData = (request: string): Promise<string> => {
+export const putData = (request: string): Promise<Esp32ConfT> => {
     return new Promise( (resolve, reject) => {
         // btdevice send request, get a response
         bleManager.state().then( (bleState: State) => {
@@ -123,13 +125,20 @@ export const putData = (request: string): Promise<string> => {
             if(bleState === 'PoweredOn') {
                 console.log('Sending message to %s requesting %s', writeChannel.uuid, request);
                 let requestB64 = Base64.encode(request);
-                writeChannel.writeWithoutResponse(requestB64).then( () => {
-                    resolve('Sent');
+                writeChannel.writeWithoutResponse(requestB64).then( (response: Characteristic) => {
+                    response.monitor( (err: BleError, charactoristic: Characteristic) => {
+                        if(err) {
+                            console.error(err.message);
+                        } else {
+                            console.log('Put got a response');
+                            resolve(Base64.decode(charactoristic.value));
+                        }
+                    });
                 }).catch( (err) => {
                     console.error('response %s', err.message);
                 });
             } else {
-                resolve('Not sent');
+                resolve({ "message": "Bluetooth is turned off" });
             }
         });
     });
