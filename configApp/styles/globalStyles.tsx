@@ -35,6 +35,10 @@ export const styles = StyleSheet.create({
       justifyContent: 'center',
       width: '90%'
     },
+    row: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+    },
     pageBody: {
       width: '100%',
       height: '100%',
@@ -59,6 +63,17 @@ export const styles = StyleSheet.create({
       alignItems: 'center',
       borderBottomWidth: 3,
       borderRightWidth: 3
+    },
+    openButton: {
+      backgroundColor: 'lightblue',
+      height: 50,    
+      width: 130,
+      borderRadius: 4,
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderBottomWidth: 3,
+      borderRightWidth: 3,
+      marginLeft: 10
     },
     connectButton: {
       backgroundColor: 'lightgreen',

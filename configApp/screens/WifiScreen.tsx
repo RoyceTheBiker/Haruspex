@@ -24,6 +24,7 @@ export default function WifiScreen({navitation, route}) {
     const [esp32Cdn, setEsp32Cdn] = useState('http://localhost:8081');
     const [changePassPlaceholder, setChangePassPlaceholder] = useState('password');
     const [selectedSSID, setSelectedSSID] = useState('');
+    const [ipAddress, setIpAddress] = useState('');
 
     const isDuplicte = (wlans: WlanT[], nextWlan: string) =>
         wlans.findIndex((wlan) => nextWlan === wlan.label) > -1;
@@ -93,6 +94,8 @@ export default function WifiScreen({navitation, route}) {
                             }
                             setEsp32Cdn(response.esp32Cdn);
                             setWebType(response.webType);
+                            // setIpAddress(response.ipAddress);
+                            setIpAddress('192.168.0.3');
                         });
                         
                     });
@@ -132,6 +135,7 @@ export default function WifiScreen({navitation, route}) {
                             labelField="label" 
                             value={selectedSSID} 
                             valueField="label"
+                            placeholder={'Select from ' + wifiSsids.length + ' SSIDs'}
                             onChange={(item) => setEsp32SSID(item.label)}
                             />
                     </View>
@@ -165,11 +169,19 @@ export default function WifiScreen({navitation, route}) {
                         />
                     </View>
 
-                    <TouchableOpacity style={styles.button} activeOpacity={5}>
-                        <Text onPress={() => Alert.alert('Saved')}>
-                        Save Settings
-                        </Text>
-                    </TouchableOpacity>
+                    <View style={styles.row}>
+                        <TouchableOpacity style={styles.button} activeOpacity={5}>
+                            <Text onPress={() => Alert.alert('Saved')}>
+                            Save Settings
+                            </Text>
+                        </TouchableOpacity>
+                        {ipAddress &&
+                        <TouchableOpacity style={styles.openButton} activeOpacity={5}>
+                            <Text onPress={() => Alert.alert('Go open')}>
+                            Open
+                            </Text>
+                        </TouchableOpacity> }
+                    </View>
                 </View>
             </ImageBackground>
         </View>
