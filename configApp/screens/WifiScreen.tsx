@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Dropdown } from 'react-native-element-dropdown';
 import { styles } from '../styles/globalStyles';
-import { Alert, ImageBackground, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, ImageBackground, Linking, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import WifiManager from 'react-native-wifi-reborn';
 import { Asset } from 'expo-asset';
 import { connectToDevice, getData, initBluetooth, putData } from '../libraries/bluetoothComs';
@@ -185,7 +185,7 @@ export default function WifiScreen({navitation, route}) {
                         </TouchableOpacity>
                         {ipAddress &&
                         <TouchableOpacity style={styles.openButton} activeOpacity={5}>
-                            <Text onPress={() => Alert.alert('Go open ' + ipAddress)}>
+                            <Text onPress={() => {Linking.openURL('http://' + ipAddress)} }>
                             Open
                             </Text>
                         </TouchableOpacity> }
