@@ -31,11 +31,11 @@ void webServerSetup() {
       Serial.print('.');
       delay(1000);
     }
-    webConfig->at("ipAddress") = WiFi.localIP();
     Serial.println(WiFi.localIP());
     Serial.print("RRSI: ");
     Serial.println(WiFi.RSSI());
 
+    webConfig->at("ipAddress") = WiFi.localIP();
     server.begin();
   }
   // We use the password to connect to Wi-Fi but must never send it over Bluetooth.

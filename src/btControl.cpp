@@ -91,6 +91,8 @@ class CharacteristicCallBack : public BLECharacteristicCallbacks {
       writeFile("/webConf.json", webConf);
       reply = "{ \"message\": \"Data saved\" }";
     }
+    Serial.print("BT reply ");
+
     characteristic_->setValue((char *)reply.c_str());
     characteristic_->notify();
   }
