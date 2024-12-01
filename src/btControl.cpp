@@ -3,6 +3,7 @@
 #include <BLEDevice.h>
 #include <BLEServer.h>
 #include "./parameters.h"
+#include <WiFi.h>
 
 // BluetoothSerial SerialBT;
 // https://www.uuidgenerator.net/
@@ -57,12 +58,19 @@ class CharacteristicCallBack : public BLECharacteristicCallbacks {
       reply = "{";
       bool firstIter = true;
       for(std::map<std::string, std::string>::iterator wC = webConf->begin(); wC != webConf->end(); wC++) {
+        if(wC->first == "ipAddress") {
+          Serial.print("Set the ipAddress ");
+          Serial.println(WiFi.localIP());
+          wC->second = WiFi.localIP().toString().c_str();
+        }
         if((wC->first != "esp32Passwd") && (wC->second.size() > 0)) {
           if(firstIter == false) reply += ",";
           reply += "\"" + wC->first + "\": \"" + wC->second + "\"";
           firstIter = false;
         }
+
       }
+
       reply += "}";
     }
 
@@ -71,6 +79,10 @@ class CharacteristicCallBack : public BLECharacteristicCallbacks {
       Serial.println("----------------------------------------------");
       Serial.println("|               Save file                    |");
       Serial.println("----------------------------------------------");
+      Serial.print("Read password = '");
+      Serial.print(webConf->at("esp32Passwd").c_str());
+      Serial.println("'");
+
       // Save the data to the config file.
       std::map<std::string, std::string>* newConf = new std::map<std::string, std::string>;
       stringToMap(data.c_str() + 10, newConf);
@@ -80,7 +92,7 @@ class CharacteristicCallBack : public BLECharacteristicCallbacks {
         Serial.print(nC->first.c_str());
         Serial.print(" = ");
         Serial.println(nC->second.c_str());
-        if(nC->first == "esp32NewPasswd") {
+        if((nC->first == "esp32NewPasswd") && (nC->second.size() > 0)) {
           Serial.println("Setting password");
           webConf->at("esp32Passwd") = nC->second;
           webConf->at("esp32PasswdSet") = "true";
@@ -88,11 +100,14 @@ class CharacteristicCallBack : public BLECharacteristicCallbacks {
           webConf->at(nC->first) = nC->second;
         }
       }
+      Serial.print("Saving with password = '");
+      Serial.print(webConf->at("esp32Passwd").c_str());
+      Serial.println("'");
       writeFile("/webConf.json", webConf);
       reply = "{ \"message\": \"Data saved\" }";
     }
     Serial.print("BT reply ");
-
+    Serial.println(reply.c_str());
     characteristic_->setValue((char *)reply.c_str());
     characteristic_->notify();
   }

@@ -2,6 +2,7 @@
 #include "parameters.h"
 #include <SPIFFS.h>
 
+// readFile returns this global value
 std::string fileBuffer;
 
 /**
@@ -14,32 +15,29 @@ std::string fileBuffer;
  *
  * returns number of bytes in the return value
  */
-int readValue(const char* fileName, char* paramName, std::string fileBuffer) {
-  int returnLength = 0;
-  // fileBuffer[0] = 0;
-  File file = SPIFFS.open(fileName);
-  if(!file){
-    Serial.println("Failed to open file for reading");
-    return(0);
-  }
+// int readValue(const char* fileName, char* paramName, std::string fileBuffer) {
+//   int returnLength = 0;
+//   File file = SPIFFS.open(fileName);
+//   if(!file){
+//     Serial.println("Failed to open file for reading");
+//     return(0);
+//   }
 
-  String paramString(paramName);
-  paramString += " = ";
-  Serial.print("Read setting: ");
-  Serial.println(paramName);
-  char lineBuffer[128];
-  while(file.available()) {
-    int readBytes = file.readBytesUntil('\n', lineBuffer, 128);
-    lineBuffer[readBytes] = 0;
-    String parseLine(lineBuffer);
-    if(parseLine.indexOf(paramString) == 0) {
-      parseLine.getBytes((unsigned char*)fileBuffer.c_str(), 64, paramString.length());
-      returnLength = fileBuffer.length();
-    }
-  }
-  file.close();
-  return(returnLength);
-}
+//   String paramString(paramName);
+//   paramString += " = ";
+//   char lineBuffer[128];
+//   while(file.available()) {
+//     int readBytes = file.readBytesUntil('\n', lineBuffer, 128);
+//     lineBuffer[readBytes] = 0;
+//     String parseLine(lineBuffer);
+//     if(parseLine.indexOf(paramString) == 0) {
+//       parseLine.getBytes((unsigned char*)fileBuffer.c_str(), 64, paramString.length());
+//       returnLength = fileBuffer.length();
+//     }
+//   }
+//   file.close();
+//   return(returnLength);
+// }
 
 /**
  * readJsonFile
@@ -52,17 +50,7 @@ int readValue(const char* fileName, char* paramName, std::string fileBuffer) {
  * return number of [key, value] pairs read from JSON file
  */
 int readJsonFile(const char* fileName, std::map<std::string, std::string>* keysValues) {
-
-  Serial.print("readJsonFile(");
-  Serial.print(fileName);
-  Serial.println(")");
-  Serial.println("Call readFile");
   std::string jsonFile = readFile(fileName);
-
-  Serial.println("Came back with a file that is ");
-  Serial.print(jsonFile.length(), DEC);
-  Serial.println(" bytes long");
-
   return stringToMap(jsonFile, keysValues);
 }
 
@@ -81,6 +69,7 @@ int stringToMap(std::string jsonString, std::map<std::string, std::string>* json
     VALUE_SET
   };
   parseStateT parseState = OUTSIDE_JSON;
+  jsonData->clear();
 
   if(jsonString.length() > 0) {
     while(jsonString.length() > 0) {
@@ -115,11 +104,12 @@ int stringToMap(std::string jsonString, std::map<std::string, std::string>* json
           } else {
             if(nextByte == '"') {
               parseState = VALUE_SET;
-              Serial.print("JSON key, value = ");
-              Serial.print(nextKey.c_str());
-              Serial.print(", ");
-              Serial.println(nextValue.c_str());
               jsonData->insert( {nextKey.c_str(), nextValue.c_str() });
+              Serial.print("JSON [");
+              Serial.print(nextKey.c_str());
+              Serial.print("] = '");
+              Serial.print(nextValue.c_str());
+              Serial.println("'");
               nextKey = "";
               nextValue = "";
             } else {
@@ -151,6 +141,7 @@ int stringToMap(std::string jsonString, std::map<std::string, std::string>* json
  * return number of bytes read from file
  */
 std::string readFile(const char* fileName) {
+  fileBuffer.clear();
   File file = SPIFFS.open(fileName);
   if(!file){
     Serial.println("Failed to open file for reading");
@@ -158,27 +149,18 @@ std::string readFile(const char* fileName) {
   }
 
   if(file.available()) {
-    Serial.println("About to read bytes into string");
     char lineBuffer[128];
     while(file.available()) {
       int readBytes = file.readBytesUntil('\n', lineBuffer, 128);
-      Serial.print("Bytes read ");
-      Serial.println(readBytes, DEC);
       lineBuffer[readBytes] = 0;
       fileBuffer += lineBuffer;
     }
-    Serial.println("Are we good now?");
-    Serial.print("Buffer length ");
-    Serial.println(fileBuffer.length(), DEC);
-    Serial.println(fileBuffer.c_str());
   }
   file.close();
   return(fileBuffer);
 }
 
 void writeFile(const char* fileName, std::map<std::string, std::string>* jsonData) {
-  Serial.println("");
-  Serial.println("writeFile");
   File file = SPIFFS.open(fileName, FILE_WRITE);
   if(!file){
     Serial.println("Failed to open file for writing");
@@ -198,7 +180,6 @@ void writeFile(const char* fileName, std::map<std::string, std::string>* jsonDat
   Serial.println(writeData.c_str());
   if(file.available()) {
     file.print(writeData.c_str());
-    Serial.println("File was written");
   }
 
   file.close();

@@ -17,7 +17,7 @@ int strobeCount = 0;
 
 void setup() {
   Serial.begin(115200);
-
+  // Trying to stop the terminal junk from flooding the screen
   gpioPinsSetup();
 
   if(!SPIFFS.begin(true)){
