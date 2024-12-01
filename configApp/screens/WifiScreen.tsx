@@ -13,7 +13,7 @@ type WlanT = {
     current: boolean
 }
 
-export default function WifiScreen({navitation, route}) {
+export default function WifiScreen({navigation, route}) {
     const [wifiSsids, setWifiSsids] = useState<WlanT[]>([]);
     const [defaultSSID, setDefaultSSID] = useState('');
     const [webType, setWebType] = useState('');
@@ -39,6 +39,7 @@ export default function WifiScreen({navitation, route}) {
         putData('PUT config ' + newConfig).then( (response: Esp32ConfT) => {
             if(response.message) {
                 console.log('Got a response message %s', response.message);
+                navigation.navigate('Select Bluetooth Device');
             }
         });
     }
@@ -185,8 +186,9 @@ export default function WifiScreen({navitation, route}) {
                         </TouchableOpacity>
                         {ipAddress &&
                         <TouchableOpacity style={styles.openButton} activeOpacity={5}>
-                            <Text onPress={() => {Linking.openURL('http://' + ipAddress)} }>
-                            Open
+                            <Text onPress={() => {Linking.openURL('googlechrome://navigate?url=' + ipAddress)} }>
+                            Open{"\n"}
+                            {ipAddress}
                             </Text>
                         </TouchableOpacity> }
                     </View>

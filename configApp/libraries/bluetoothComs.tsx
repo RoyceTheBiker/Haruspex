@@ -41,8 +41,6 @@ export const connectToDevice = (deviceName: string): Promise<string> => {
         btDevice.connect({requestMTU: 517}).then( (device: Device) => {
             console.log('Discovering characteristics');
             return device.discoverAllServicesAndCharacteristics();
-        }).catch( (err) => {
-            console.error('Connet failed %s', err.message);
         }).then( (device: Device) => {
             console.log('charactoristics discovered');
             return device.services();
