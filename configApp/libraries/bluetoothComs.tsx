@@ -75,7 +75,7 @@ export const getData = (request: string): Promise<Esp32ConfT> => {
     return new Promise( (resolve) => {
         let replyConf = {
             esp32Hostname: 'HardwareIsOff',
-            esp32PasswdSet: true,
+            esp32PasswdSet: 'true',
             esp32SSID: 'HardwareIsOff',
             esp32Passwd: '',
             esp32Cdn: 'HardwareIsOff',

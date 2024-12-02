@@ -29,7 +29,6 @@ export const styles = StyleSheet.create({
       height: 60,
     },
     table: {
-      // flex: 0,
       backgroundColor: '#555',
       alignItems: 'center',
       justifyContent: 'center',
@@ -38,16 +37,19 @@ export const styles = StyleSheet.create({
     row: {
       flexDirection: 'row',
       flexWrap: 'wrap',
+      marginTop: 20,
     },
-    pageBody: {
-      width: '100%',
+    backgroundImg: {
+      flexGrow: 1,
       height: '100%',
-      // alignItems: 'center',
-      // flex: 1,
-      // justifyContent: 'center',
+    },
+    scrollView: {
+      flexGrow: 1,
+      paddingBottom: 100,
     },
     container: {
       // flex: 1,
+      flexGrow: 1,
       // backgroundColor: '#fffeee',
       alignItems: 'center',
       justifyContent: 'center',
@@ -93,7 +95,8 @@ export const styles = StyleSheet.create({
     fieldSet:{
       margin: 10,
       paddingHorizontal: 10,
-      paddingBottom: 10,
+      paddingBottom: 50,
+      marginTop: 20, 
       borderRadius: 5,
       borderWidth: 1,
       alignItems: 'left',

@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Dropdown } from 'react-native-element-dropdown';
 import { styles } from '../styles/globalStyles';
-import { Alert, ImageBackground, Linking, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { findNodeHandle, ImageBackground, Linking, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import WifiManager from 'react-native-wifi-reborn';
 import { Asset } from 'expo-asset';
 import { connectToDevice, getData, initBluetooth, putData } from '../libraries/bluetoothComs';
@@ -19,12 +19,13 @@ export default function WifiScreen({navigation, route}) {
     const [webType, setWebType] = useState('');
     const [esp32Hostname, setEsp32Hostname] = useState(route.params.name);
     const [esp32SSID, setEsp32SSID] = useState<string>();
-    const [esp32PasswdIsSet, setesp32PasswdIsSet] = useState(false);
+    const [esp32PasswdIsSet, setesp32PasswdIsSet] = useState('false');
     const [esp32NewPasswd, setEsp32NewPasswd] = useState('');
     const [esp32Cdn, setEsp32Cdn] = useState('http://localhost:8081');
     const [changePassPlaceholder, setChangePassPlaceholder] = useState('password');
     const [selectedSSID, setSelectedSSID] = useState('');
     const [ipAddress, setIpAddress] = useState('');
+    const hostnameRef = useRef();
 
     const saveSettings = () => {
         console.log('saveSettings');
@@ -99,7 +100,7 @@ export default function WifiScreen({navigation, route}) {
                                 setEsp32SSID(response.esp32SSID);
                             }
                             setesp32PasswdIsSet(response.esp32PasswdSet);
-                            if(response.esp32PasswdSet === true) {
+                            if(response.esp32PasswdSet === 'true') {
                                 setChangePassPlaceholder('change password');
                             }
                             setEsp32Cdn(response.esp32Cdn);
@@ -115,84 +116,98 @@ export default function WifiScreen({navigation, route}) {
         }
     }
 
-    return (
-        <View style={styles.container}>
-            <ImageBackground
-                source={{uri: Asset.fromModule(require("../assets/background.png")).uri,
-                }}>
-                <View style={styles.container}>
-                    <Text style={styles.titleBar}>Haruspex</Text>
-                    {/* <!-- StatusBar style="auto" / --> */}
-                
-                    <View style={styles.fieldSet}>
-                        <Text style={styles.legend}>Hostname</Text>
-                        <TextInput
-                        style={styles.input}
-                        onChangeText={setEsp32Hostname}
-                        value={esp32Hostname}          
-                        />
-                    </View>
-                
-                    <View style={styles.fieldSet}>
-                        <Text style={styles.legend}>Wi-Fi SSID</Text>
-                        <Dropdown 
-                            style={styles.dropdown}
-                            
-                            selectedTextStyle={styles.selectedTextStyle}
-                            inputSearchStyle={styles.inputSearchStyle}
-                            data={wifiSsids} 
-                            labelField="label" 
-                            value={selectedSSID} 
-                            valueField="label"
-                            placeholder={'Select from ' + wifiSsids.length + ' SSIDs'}
-                            onChange={(item) => setEsp32SSID(item.label)}
-                            />
-                    </View>
-                
-                    <View style={styles.fieldSet}>
-                        <Text style={styles.legend}>Wi-Fi Password</Text>
-                        <TextInput
-                        style={styles.input}
-                        onChangeText={setEsp32NewPasswd}
-                        secureTextEntry={true}
-                        placeholder={changePassPlaceholder} 
-                        value={esp32NewPasswd}         
-                        />
-                    </View>
-                
-                    <View style={styles.fieldSet}>
-                        <Text style={styles.legend}>CDN URL</Text>
-                        <TextInput
-                        style={styles.input}
-                        onChangeText={setEsp32Cdn}            
-                        value={esp32Cdn}
-                        />
-                    </View>
-                
-                    <View style={styles.fieldSet}>
-                        <Text style={styles.legend}>Web Type</Text>
-                        <TextInput
-                        style={styles.input}
-                        onChangeText={setWebType}            
-                        value={webType}
-                        />
-                    </View>
+    let inputFocused = (refName) => {
+        setTimeout( () => {
+            console.log('focus change %s', refName);
+        }, 50);
+    }
 
-                    <View style={styles.row}>
-                        <TouchableOpacity style={styles.button} activeOpacity={5}>
-                            <Text onPress={() => saveSettings()}>
-                            Save Settings
-                            </Text>
-                        </TouchableOpacity>
-                        {ipAddress &&
-                        <TouchableOpacity style={styles.openButton} activeOpacity={5}>
-                            <Text onPress={() => {Linking.openURL('googlechrome://navigate?url=' + ipAddress)} }>
-                            Open{"\n"}
-                            {ipAddress}
-                            </Text>
-                        </TouchableOpacity> }
+    return (
+        <View style={{flex: 1}}>
+            <ImageBackground style={styles.backgroundImg}
+                    source={{uri: Asset.fromModule(require("../assets/background.png")).uri,
+                    }}>
+
+                <ScrollView style={styles.scrollView}>
+                    <View style={styles.container}>
+                        <Text style={styles.titleBar}>Haruspex</Text>
+                        {/* <!-- StatusBar style="auto" / --> */}
+                    
+                        <View style={styles.fieldSet}>
+                            <Text style={styles.legend}>Hostname</Text>
+                            <TextInput
+                            style={styles.input}
+                            onChangeText={setEsp32Hostname}
+                            value={esp32Hostname}     
+                            ref={hostnameRef}
+                            onFocus={inputFocused.bind(this, 'hostname')}    
+                            />
+                        </View>
+                    
+                        <View style={styles.fieldSet}>
+                            <Text style={styles.legend}>Wi-Fi SSID</Text>
+                            <Dropdown 
+                                style={styles.dropdown}
+                                
+                                selectedTextStyle={styles.selectedTextStyle}
+                                inputSearchStyle={styles.inputSearchStyle}
+                                data={wifiSsids} 
+                                labelField="label" 
+                                value={selectedSSID} 
+                                valueField="label"
+                                placeholder={'Select from ' + wifiSsids.length + ' SSIDs'}
+                                onChange={(item) => setEsp32SSID(item.label)}
+                                />
+                        </View>
+                    
+                        <View style={styles.fieldSet}>
+                            <Text style={styles.legend}>Wi-Fi Password</Text>
+                            <TextInput
+                            style={styles.input}
+                            onChangeText={setEsp32NewPasswd}
+                            secureTextEntry={true}
+                            placeholder={changePassPlaceholder} 
+                            value={esp32NewPasswd}       
+                            onFocus={inputFocused.bind(this, 'password')}  
+                            />
+                        </View>
+                    
+                        <View style={styles.fieldSet}>
+                            <Text style={styles.legend}>CDN URL</Text>
+                            <TextInput
+                            style={styles.input}
+                            onChangeText={setEsp32Cdn}            
+                            value={esp32Cdn}
+                            onFocus={inputFocused.bind(this, 'cdnhost')}
+                            />
+                        </View>
+                    
+                        <View style={styles.fieldSet}>
+                            <Text style={styles.legend}>Web Type</Text>
+                            <TextInput
+                            style={styles.input}
+                            onChangeText={setWebType}            
+                            value={webType}
+                            onFocus={inputFocused.bind(this, 'webtype')}
+                            />
+                        </View>
+
+                        <View style={styles.row}>
+                            <TouchableOpacity style={styles.button} activeOpacity={5}>
+                                <Text onPress={() => saveSettings()}>
+                                Save Settings
+                                </Text>
+                            </TouchableOpacity>
+                            {ipAddress &&
+                            <TouchableOpacity style={styles.openButton} activeOpacity={5}>
+                                <Text onPress={() => {Linking.openURL('googlechrome://navigate?url=' + ipAddress)} }>
+                                Open{"\n"}
+                                {ipAddress}
+                                </Text>
+                            </TouchableOpacity> }
+                        </View>
                     </View>
-                </View>
+                </ScrollView>
             </ImageBackground>
         </View>
     );

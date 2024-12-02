@@ -1,28 +1,43 @@
 {
-    "build": {
-      "base": {
-        "node": "19.8.1",
-        "env": {
-          "Haruspex": "configApp"
-        },
-        "android": {
-          "image": "latest",
-          "env": {
-            "PLATFORM": "android"
-          }
-        }
+  "cli": {
+    "version": ">=13.1.0"
+  },
+  "build": {
+    "base": {
+      "node": "19.8.1",
+      "env": {
+        "Haruspex": "configApp"
       },
-      "development": {
-        "extends": "base",
-        "developmentClient": true,
+      "android": {
+        "image": "latest",
         "env": {
-          "ENVIRONMENT": "development"
-        },
-        "android": {
-          "distribution": "internal",
-          "withoutCredentials": true,
-          "buildType": "apk"
+          "PLATFORM": "android"
         }
       }
+    },
+    "development": {
+      "extends": "base",
+      "developmentClient": true,
+      "env": {
+        "ENVIRONMENT": "development"
+      },
+      "android": {
+        "distribution": "internal",
+        "withoutCredentials": true,
+        "buildType": "apk"
+      }
+    },
+    "release": {
+      "extends": "base",
+      "developmentClient": false,
+      "env": {
+        "ENVIRONMENT": "release"
+      },
+      "android": {
+        "distribution": "internal",
+        "withoutCredentials": true,
+        "buildType": "apk"
+      }
     }
+  }
 }
