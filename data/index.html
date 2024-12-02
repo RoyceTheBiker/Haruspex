@@ -21,7 +21,12 @@ html {
 .button2 {
   background-color: #555555;
 }</style>
-<script language="JavaScript" type="text/javascript" src="http://CDNHOST/haruspex.js"></script>
+<script>
+  const CdnHost = 'CDNHOST';
+  s = document.createElement('script');
+  s.src = "http://" + CdnHost + "/haruspex.js";
+  document.getElementsByTagName('head')[0].appendChild(s);
+</script>
 </head>
 <body onload="haruspex();">
 </body></html>
