@@ -6,7 +6,7 @@ function haruspex() {
     console.log(`jQuery ${$.fn.jquery} has been loaded successfully!`);
     // use jQuery below
     $('<div/>').attr('id','mainDiv').appendTo('body');
-    $('#mainDiv').load('http://' + CdnHost + '/haruspex.html')
+    $('#mainDiv').load(CdnHost + '/haruspex.html');
     // $('#mainDiv').append('<div>Hello, Stack Overflow users</div>');
     // buildButtons();
     var bsStyles = document.createElement('link');

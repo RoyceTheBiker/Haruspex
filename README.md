@@ -1,10 +1,10 @@
 # Haruspex
-A web server built on the ESP32 platform.
+A web server built on the ESP32 platform. It uses a React-Native app for Android to setup the Wi-Fi credentials and it serves the web frontend from an external CDN to save space in the microcontroller.
 
 First commit was a rudimentary web server as taken from the example [ESP32 Web Server](https://randomnerdtutorials.com/esp32-web-server-arduino-ide/)
-with some small changes.
+with some small changes. Code was changed to not block requests from other clients so that multiple connections can be made.
 
-Code was changed to not block requests from other clients so that multiple connections can be made.
+This is my first Bluetooth project with the ESP32 but it was having a lot of problems communication with the React-Native app. To isolate the problems the [BletiaCS](https://gitlab.com/SiliconTao-Embedded/BletiaCS) project was created to test Bluetooth communications between a client and a server that are both ESP32 devices.
 
 <!-- vscode-markdown-toc -->
 * 1. [Development](#Development)
@@ -113,7 +113,30 @@ export PATH=$PATH:$ANDROID_HOME/emulator
 export JAVA_HOME=/Library/Java/JavaVirtualMachines/amazon-corretto-21.jdk/Contents/Home
 ```
 
-npx expo install react-native-gesture-handler react-native-safe-area-context react-native-reanimated react-native-screens
+Once you have setup your Java environment variables compile the DEV version of the code like so.
+```bash
+cd configApp
+npm install
+npm run dev_build
+```
+
+If you are not able to compile the APK, this prebuilt one is available.
+[Haruspex.apk]
+
+Connect the Android phone via USB and upload using either of these
+```bash
+npm run upload
+
+# or
+adb install Haruspex.apk
+```
+
+To run the DEV version, Metro must be running on the dev computer inside the ``configApp`` directory.
+```bash
+npx expo start
+```
+
+
 
 ## Android Debug Bridge (adb)
 ADB requires that the phone be in developer mode and that ``USB Debugging`` be enabled in `Settings` -> `Developer Options`
@@ -130,6 +153,8 @@ adb pull /storage/self/primary/DCIM//Screenshots/Screenshot_20241112-092414_Haru
 ```
 
 ## Running In AVD
+AVD does not support BLE hardware.
+
 Android Virtual Device must be setup in Android Studio before running in this way.
 
 AVD does not have access to Bluetooth device.
@@ -138,32 +163,10 @@ AVD does not have access to Bluetooth device.
 npx expo run:android
 ```
 
-##  3. <a name='CompilingTheAPK'></a>Compiling The APK
-This step requiers the user to have a login account with [Expo](https://expo.dev)
-
-The compiler does not generate log files on the build system. Compile log files are found in the web console for the project on [expo.dev](https://expo.dev/)
-
-```bash
-eas build -p android --profile development
-```
-
-Add ``--local`` to compile locally and not use a build slot on [expo.dev](https://expo.dev)
-```bash
-eas build -p android --profile development --local
-```
-
-
 ##  4. <a name='WifiCredentials'></a>Wifi Credentials
-These need to be set in ``./data/secrets.txt``.
+Connect to the ESP32 using the Haruspex BLE app for Android and set Wi-Fi credentials.
 
-An example can be found in ``./data/secrets.txt.example``
-```txt
-Hostname = esp32host
-WiFi SSID = TheWifiLove
-WiFi PASS = Slartibartfast
-```
-
-Copy ``./data/secrets.txt.example`` to ``./data/secrets.txt`` and change the values for the local network. This file will not be uploaded to Git.
+This version of the project no longer supports a ``secrets.txt`` file.
 
 # Partitions
 Adding Bluetooth libraries made the binary 1.5MB and was to large for the default 1.3MB app partition.
@@ -186,8 +189,11 @@ The LibreOffice Calc file is configured to calculate the partition sizes and off
 # Frontend CDN
 The frontend files are served from a CDN (Content Delivery Network).
 To do this ``Access-Control-Allow-Origin`` is set in the header served by [webServer.cpp](./src/webServer.cpp)
-and in the [CDN](https://haruspex.SiliconTao.com/).
+and in the [CDN](https://cdn.SiliconTao.com/).
+
 For development the frontend can be served locally using [webServer.py](./frontend/webServer.py) that has CORS enabled.
+
+
 
 ##  6. <a name='UsefulLinks'></a>Useful Links
 - [ESP32 Dev Kit Power Options](https://techexplorations.com/guides/esp32/begin/power/)
