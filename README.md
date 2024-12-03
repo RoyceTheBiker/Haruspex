@@ -11,10 +11,11 @@ This is my first Bluetooth project with the ESP32 but it was having a lot of pro
 	* 1.1. [VS Codium](#VSCodium)
 	* 1.2. [Hardware](#Hardware)
 * 2. [configApp](#configApp)
-* 3. [Compiling The APK](#CompilingTheAPK)
-* 4. [Wifi Credentials](#WifiCredentials)
-* 5. [The Data Partition](#TheDataPartition)
-* 6. [Useful Links](#UsefulLinks)
+* 3. [Android Debug Bridge (adb)](#AndroidDebugBridgeadb)
+* 4. [Running In AVD](#RunningInAVD)
+* 5. [Wifi Credentials](#WifiCredentials)
+* 6. [The Data Partition](#TheDataPartition)
+* 7. [Useful Links](#UsefulLinks)
 
 <!-- vscode-markdown-toc-config
 	numbering=true
@@ -143,7 +144,7 @@ npx expo start
 
 
 
-## Android Debug Bridge (adb)
+##  3. <a name='AndroidDebugBridgeadb'></a>Android Debug Bridge (adb)
 ADB requires that the phone be in developer mode and that ``USB Debugging`` be enabled in `Settings` -> `Developer Options`
 
 List files in Screenshots folder
@@ -157,7 +158,7 @@ adb pull /storage/self/primary/DCIM//Screenshots/Screenshot_20241112-092414_Haru
 /storage/self/primary/DCIM//Screenshots/Screenshot_20241112-092414_Ha...pex.jpg: 1 file pulled, 0 skipped. 13.0 MB/s (191856 bytes in 0.014s)
 ```
 
-## Running In AVD
+##  4. <a name='RunningInAVD'></a>Running In AVD
 AVD does not support BLE hardware.
 
 Android Virtual Device must be setup in Android Studio before running in this way.
@@ -168,7 +169,7 @@ AVD does not have access to Bluetooth device.
 npx expo run:android
 ```
 
-##  4. <a name='WifiCredentials'></a>Wifi Credentials
+##  5. <a name='WifiCredentials'></a>Wifi Credentials
 Connect to the ESP32 using the Haruspex BLE app for Android and set Wi-Fi credentials.
 
 This version of the project no longer supports a ``secrets.txt`` file.
@@ -180,7 +181,7 @@ A custom partition was made to remove OTA partitions and increase the app partit
 
 > **_NOTE:_** [Offset must be multiple of 4kB (0x1000) and for app partitions it must be aligned by 64kB (0x10000).](https://developer.espressif.com/blog/how-to-use-custom-partition-tables-on-esp32/)
 
-##  5. <a name='TheDataPartition'></a>The Data Partition
+##  6. <a name='TheDataPartition'></a>The Data Partition
 The data partition is used to store files that are not compiled code.
 
 The ``./data`` directory must be built as a Filesystem Image in PlatformIO and uploaded to the ESP32.
@@ -200,7 +201,7 @@ For development the frontend can be served locally using [webServer.py](./fronte
 
 
 
-##  6. <a name='UsefulLinks'></a>Useful Links
+##  7. <a name='UsefulLinks'></a>Useful Links
 - [ESP32 Dev Kit Power Options](https://techexplorations.com/guides/esp32/begin/power/)
 - [Amazon ESP32 Dev](https://www.amazon.ca/gp/product/B07QCP2451/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&th=1)
 - [ESP32-WROOM Datasheet](https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32_datasheet_en.pdf)
