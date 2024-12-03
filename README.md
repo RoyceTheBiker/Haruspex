@@ -121,7 +121,12 @@ npm run dev_build
 ```
 
 If you are not able to compile the APK, this prebuilt one is available.
-[Haruspex.apk]
+[Haruspex.apk](https://cdn.SiliconTao.com/Haruspex.apk)
+Validate the file with MD5SUM [Haruspex.md5](https://cdn.SiliconTao.com/Haruspex.md5).
+```bash
+md5sum -c Haruspex.md5
+```
+
 
 Connect the Android phone via USB and upload using either of these
 ```bash
