@@ -88,19 +88,28 @@ int webServerListen() {
                 ledState = 0;
               }
               if(request.indexOf("led/on/") > 0) {
-                request.remove(15);
-                int bitMask = 1;
+                request.remove(0, 16);
+                Serial.print("bit shift ");
+                Serial.println(request.c_str());
+                uint8_t bitMask = 1;
                 for (int shiftIt = 0; shiftIt < atoi(request.c_str()); shiftIt++) {
-                  bitMask << 1;
+                  Serial.print("shift ");
+                  Serial.println(bitMask, DEC);
+                  bitMask <<= 1;
                 }
                 // Bitwise OR to turn on the bit
                 ledState = ledState | bitMask;
               }
               if(request.indexOf("led/off/") > 0) {
-                request.remove(16);
-                int bitMask = 254;
+                request.remove(0, 17);
+                Serial.print("bit shift ");
+                Serial.println(request.c_str());
+                uint8_t bitMask = 254;
                 for (int shiftIt = 0; shiftIt < atoi(request.c_str()); shiftIt++) {
-                  bitMask << 1;
+                  Serial.print("shift ");
+                  Serial.println(bitMask, DEC);
+                  bitMask <<= 1;
+                  bitMask += 1;
                 }
                 // Bitwise AND to turn on the bit
                 ledState = ledState & bitMask;
