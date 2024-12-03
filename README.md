@@ -35,7 +35,7 @@ VSCodium is not supported by Microsoft and so these plugins must be manually ins
 4. Install PlatformIO vsix in vscodium under extensions / install from vsix
 
 ###  1.2. <a name='Hardware'></a>Hardware
-[Fritzing](https://fritzing.org/) was used to create the board layout.
+I used [Fritzing](https://fritzing.org/) to create a circut board layout.
 
 EPS32 part for Fritzing can be found here [ESP32S-HiLetgo Dev Boad with Pinout Template](https://forum.fritzing.org/t/esp32s-hiletgo-dev-boad-with-pinout-template/5357?u=steelgoose)
 
