@@ -47,13 +47,17 @@ function leds() {
 
     bsScript.addEventListener('load', () => {      
       $.get('/api/ledsalloff');
+      $('#mainDiv').append('<table id="buttonTable"></table>');
       for(let i = 0; i < 8; i++) {
-        $('#mainDiv').append('<p id="pinState' + i + '">PIN ' + i + ' is ' + ledState[i] + ' </p>');
-        $('#mainDiv').append('<p><button id="button_' + i + '" class="btn btn-info"></button></p>');
+        $('#buttonTable').append('<tr><td width="30%"><p id="pinState' + i + '">PIN ' + i + 
+          ' is ' + ledState[i] + ' </p></td><td width="30%"></td>' +
+          '<td width="30%"><p><button id="button_' + i + '" class="btn btn-info"></button></p></td></tr>');
         let newText = '<i class="bi bi-lightbulb"></i>Turn ' + (ledState[i] === 'off' ? 'ON' : 'OFF');
         $('#button_' + i).html(newText);
         $('#button_' + i).click( () => buttonClick(i));
+        
       }
+      
     });
   });
   document.head.appendChild(jqScript);
