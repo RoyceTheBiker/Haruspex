@@ -49,8 +49,8 @@ function leds() {
       $.get('/api/ledsalloff');
       for(let i = 0; i < 8; i++) {
         $('#mainDiv').append('<p id="pinState' + i + '">PIN ' + i + ' is ' + ledState[i] + ' </p>');
-        $('#mainDiv').append('<p><i class="bi bi-lightbulb"></i><button id="button_' + i + '" class="btn btn-info">Turn</button></p>');
-        let newText = 'Turn ' + (ledState[i] === 'off' ? 'ON' : 'OFF');
+        $('#mainDiv').append('<p><button id="button_' + i + '" class="btn btn-info"></button></p>');
+        let newText = '<i class="bi bi-lightbulb"></i>Turn ' + (ledState[i] === 'off' ? 'ON' : 'OFF');
         $('#button_' + i).html(newText);
         $('#button_' + i).click( () => buttonClick(i));
       }
@@ -64,5 +64,5 @@ function buttonClick(buttonIndex) {
   $.get('/api/led/' + (ledState[buttonIndex] === 'off' ? 'on' : 'off') + '/' + buttonIndex);
   ledState[buttonIndex] = ledState[buttonIndex] === 'off' ? 'on' : 'off';
   $('#pinState' + buttonIndex).html('PIN ' + buttonIndex + ' is ' + (ledState[buttonIndex] === 'off' ? 'off' : 'on'));
-  $('#button_' + buttonIndex).html('Turn ' + (ledState[buttonIndex] === 'off' ? 'ON' : 'OFF'));
+  $('#button_' + buttonIndex).html('<i class="bi bi-lightbulb"></i>Turn ' + (ledState[buttonIndex] === 'off' ? 'ON' : 'OFF'));
 }
