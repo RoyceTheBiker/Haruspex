@@ -142,7 +142,7 @@ To run the DEV version, Metro must be running on the dev computer inside the ``c
 npx expo start
 ```
 
-
+![Bluetooth](./frontend/Bluetooth.jpg) ![Wi-Fi](./frontend/Wi-Fi.jpg)
 
 ##  3. <a name='AndroidDebugBridgeadb'></a>Android Debug Bridge (adb)
 ADB requires that the phone be in developer mode and that ``USB Debugging`` be enabled in `Settings` -> `Developer Options`
