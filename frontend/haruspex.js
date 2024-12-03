@@ -25,13 +25,4 @@ function haruspex() {
   document.head.appendChild(jqScript);
 }
 
-// function buildButtons() {
-//   for(let i = 0; i < 8; i++) {
-//     $('#mainDiv').append('<p>PIN ' + i + ' - State off</p>');
-//     $('#mainDiv').append('<p><a href="/' + 1 + '/on"><button class="btn btn-info">ON</button></a></p>');
-//   }
-// }
 
-function buttonClick(buttonName) {
-  $.get('/api/' + buttonName);
-}
