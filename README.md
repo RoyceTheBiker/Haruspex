@@ -195,7 +195,7 @@ The LibreOffice Calc file is configured to calculate the partition sizes and off
 # Frontend CDN
 The frontend files are served from a CDN (Content Delivery Network).
 To do this ``Access-Control-Allow-Origin`` is set in the header served by [webServer.cpp](./src/webServer.cpp)
-and in the [CDN](https://cdn.SiliconTao.com/).
+and in the CDN.
 
 For development the frontend can be served locally using [webServer.py](./frontend/webServer.py) that has CORS enabled.
 
