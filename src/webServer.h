@@ -5,4 +5,4 @@ extern std::map<std::string, std::string>* webConfig;
 void webServerSetup();
 int webServerListen();
 void scanNetworks();
-byte webServerLedState();
+uint8_t webServerLedState();

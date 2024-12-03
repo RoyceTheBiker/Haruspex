@@ -7,7 +7,7 @@
 #include <SPIFFS.h>
 #include <WiFi.h>
 
-byte ledState = 0;
+uint8_t ledState = 0;
 int flashSpeed = 1000;
 char buffer[64];
 const char secretsFile[] = "/secrets.txt";
@@ -47,7 +47,7 @@ void webServerSetup() {
   btControlSetup(webConfig);
 }
 
-byte webServerLedState() {
+uint8_t webServerLedState() {
   return(ledState);
 }
 
