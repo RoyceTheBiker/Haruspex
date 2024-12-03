@@ -82,7 +82,7 @@ int webServerListen() {
             } else {
               String fileString = readFile("/index.html").c_str();
               fileString.replace("CDNHOST", webConfig->at("esp32Cdn").c_str());
-
+              fileString.replace("WEBTYPE", webConfig->at("webType").c_str());
               client.println(fileString.c_str());
 
             }
