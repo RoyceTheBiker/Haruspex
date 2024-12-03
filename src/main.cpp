@@ -8,7 +8,8 @@ unsigned char bankValue = 0;
 typedef enum {
   COUNTER_MODE,
   STROBE_UP,
-  STROBE_DOWN
+  STROBE_DOWN,
+  LED_CONTROL
 } RunMode;
 int StrobeCount = 0;
 int ChangeDelay = 5000;
@@ -43,6 +44,10 @@ void loop() {
     ChangeDelay = 1000;
     runMode = STROBE_UP;
   }
+  if(changeModeRequest == 3) {
+    runMode = LED_CONTROL;
+    ChangeDelay = 1000;
+  }
 
   // btControlListen();
   if(blinkDelay++ > ChangeDelay) {
@@ -70,6 +75,9 @@ void loop() {
           runMode = STROBE_UP;
         }
         break;
+      }
+      case LED_CONTROL: {
+        gpioSetBank(webServerLedState());
       }
     }
 

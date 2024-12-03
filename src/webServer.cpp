@@ -7,6 +7,7 @@
 #include <SPIFFS.h>
 #include <WiFi.h>
 
+byte ledState = 0;
 int flashSpeed = 1000;
 char buffer[64];
 const char secretsFile[] = "/secrets.txt";
@@ -46,6 +47,10 @@ void webServerSetup() {
   btControlSetup(webConfig);
 }
 
+byte webServerLedState() {
+  return(ledState);
+}
+
 int webServerListen() {
   int changeMode = 0;
   String request;
@@ -77,6 +82,28 @@ int webServerListen() {
               }
               if(request.indexOf("count") > 0) {
                 changeMode = 1;
+              }
+              if(request.indexOf("ledsalloff") > 0) {
+                changeMode = 3;
+                ledState = 0;
+              }
+              if(request.indexOf("led/on/") > 0) {
+                request.remove(15);
+                int bitMask = 1;
+                for (int shiftIt = 0; shiftIt < atoi(request.c_str()); shiftIt++) {
+                  bitMask << 1;
+                }
+                // Bitwise OR to turn on the bit
+                ledState = ledState | bitMask;
+              }
+              if(request.indexOf("led/off/") > 0) {
+                request.remove(16);
+                int bitMask = 254;
+                for (int shiftIt = 0; shiftIt < atoi(request.c_str()); shiftIt++) {
+                  bitMask << 1;
+                }
+                // Bitwise AND to turn on the bit
+                ledState = ledState & bitMask;
               }
               Serial.println(request);
             } else {
