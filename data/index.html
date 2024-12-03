@@ -27,7 +27,12 @@ html {
   s = document.createElement('script');
   s.src = CdnHost + "/" + WebType + ".js";
   document.getElementsByTagName('head')[0].appendChild(s);
-  document.getElementById('body').addEventListener('load', window[WebType]());
+
+  setTimeout( () => {
+    console.log('WebType %s', WebType);
+    console.log('type of %s', typeof window[WebType]);
+    window.addEventListener('load', window[WebType]());
+  }, 150);
 </script>
 </head>
 <body>

@@ -17,27 +17,25 @@ function leds() {
     bsScript.type = 'text/javascript';
     bsScript.src = 'https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js';
     bsScript.addEventListener('load', () => {
-
+      let ledState = {
+        0: 'off',
+        1: 'off',
+        2: 'off',
+        3: 'off',
+        4: 'off',
+        5: 'off',
+        6: 'off',
+        7: 'off'
+      };
+      $.get('/api/ledsalloff');
+      for(let i = 0; i < 8; i++) {
+        $('#mainDiv').append('<p>PIN ' + i + ' is ' + ledState[i] + ' </p>');
+        $('#mainDiv').append('<p><button class="btn btn-info">Turn ' + ledState[i] === 'off' ? 'ON' : 'OFF' + '</button></p>');
+      }
     });
     document.head.appendChild(bsScript);
   });
   document.head.appendChild(jqScript);
-
-  let ledState = {
-    0: 'off',
-    1: 'off',
-    2: 'off',
-    3: 'off',
-    4: 'off',
-    5: 'off',
-    6: 'off',
-    7: 'off'
-  };
-  $.get('/api/ledsalloff');
-  for(let i = 0; i < 8; i++) {
-    $('#mainDiv').append('<p>PIN ' + i + ' is ' + ledState[i] + ' </p>');
-    $('#mainDiv').append('<p><button class="btn btn-info">Turn ' + ledState[i] === 'off' ? 'ON' : 'OFF' + '</button></p>');
-  }
 }
 
 function buttonClick(buttonIndex) {
