@@ -89,12 +89,8 @@ int webServerListen() {
               }
               if(request.indexOf("led/on/") > 0) {
                 request.remove(0, 16);
-                Serial.print("bit shift ");
-                Serial.println(request.c_str());
                 uint8_t bitMask = 1;
                 for (int shiftIt = 0; shiftIt < atoi(request.c_str()); shiftIt++) {
-                  Serial.print("shift ");
-                  Serial.println(bitMask, DEC);
                   bitMask <<= 1;
                 }
                 // Bitwise OR to turn on the bit
@@ -102,12 +98,8 @@ int webServerListen() {
               }
               if(request.indexOf("led/off/") > 0) {
                 request.remove(0, 17);
-                Serial.print("bit shift ");
-                Serial.println(request.c_str());
                 uint8_t bitMask = 254;
                 for (int shiftIt = 0; shiftIt < atoi(request.c_str()); shiftIt++) {
-                  Serial.print("shift ");
-                  Serial.println(bitMask, DEC);
                   bitMask <<= 1;
                   bitMask += 1;
                 }

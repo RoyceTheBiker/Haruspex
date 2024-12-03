@@ -39,7 +39,6 @@ VSCodium is not supported by Microsoft and so these plugins must be manually ins
 
 EPS32 part for Fritzing can be found here [ESP32S-HiLetgo Dev Boad with Pinout Template](https://forum.fritzing.org/t/esp32s-hiletgo-dev-boad-with-pinout-template/5357?u=steelgoose)
 
-![ESP32_4.gif](https://silicontao.com/api/files/getFile/marquis/a4b531f19abc24e166fa17bd657dd1408142f0c3)
 
 ```bash
 # esptool flash_id
