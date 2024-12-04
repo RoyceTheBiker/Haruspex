@@ -25,4 +25,8 @@ function haruspex() {
   document.head.appendChild(jqScript);
 }
 
+function buttonClick(buttonName) {
+  $.get('/api/' + buttonName);
+}
+
 

@@ -33,6 +33,10 @@ void setup() {
 
 void loop() {
   int changeModeRequest = webServerListen();
+  if(changeModeRequest != 0) {
+    Serial.print("Change mode ");
+    Serial.println(changeModeRequest, DEC);
+  }
   if(changeModeRequest == 1) {
     bankValue = 0;
     ChangeDelay = 5000;
