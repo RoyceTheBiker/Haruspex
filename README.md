@@ -103,7 +103,7 @@ npx expo run:android
 
 To build the APK use [eas-cli](https://www.npmjs.com/package/eas-cli)
 
-Set the Android SDK path and environment variable in the shell profile
+Set the Android SDK path and environment variable in the shell profile. These values are specific to my environment. You will need to adjust them to match your environment.
 ```bash
 export ANDROID_HOME=$HOME/Library/Android/sdk
 export PATH=$PATH:$ANDROID_HOME/platform-tools
@@ -117,7 +117,8 @@ Once you have setup your Java environment variables compile the DEV version of t
 ```bash
 cd configApp
 npm install
-npm run dev_build
+npm run dev_build # Builds HaruspexDev.apk to debug with Expo Metro
+npm run release_build # Build Haruspex.apk as standalone app
 ```
 
 If you are not able to compile the APK, this prebuilt one is available.
@@ -130,7 +131,8 @@ md5sum -c Haruspex.md5
 
 Connect the Android phone via USB and upload using either of these
 ```bash
-npm run upload
+npm run upload # To install HaruspexDev.apk
+npm run release # To install Haruspex.apk
 
 # or
 adb install Haruspex.apk

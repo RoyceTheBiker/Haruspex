@@ -7,7 +7,7 @@
 
 // BluetoothSerial SerialBT;
 // https://www.uuidgenerator.net/
-#define SERVICE_UUID        "aac12ad2-a77c-48e2-89ad-a3e7a32422fe"
+#define SERVICE_UUID        "aac12ad2-a77c-48e2-89ad-a3e7a32422fb"
 #define WRITE_CHARACTERISTIC_UUID "f78f9b6c-c078-4ef1-af4f-b68c1df1af4e"
 
 BLEServer *pServer = NULL;
