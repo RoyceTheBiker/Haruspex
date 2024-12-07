@@ -146,7 +146,9 @@ npx expo start
 ![Bluetooth](./frontend/Bluetooth.jpg) ![Wi-Fi](./frontend/Wi-Fi.jpg)
 
 ##  3. <a name='AndroidDebugBridgeadb'></a>Android Debug Bridge (adb)
-ADB requires that the phone be in developer mode and that ``USB Debugging`` be enabled in `Settings` -> `Developer Options`
+ADB requires that the phone be in developer mode and that ``USB Debugging`` be enabled in `Settings` -> `Developer Options`.
+
+ADB is a command line tool that can be used for file management of the Android device.
 
 List files in Screenshots folder
 ```
@@ -160,11 +162,9 @@ adb pull /storage/self/primary/DCIM//Screenshots/Screenshot_20241112-092414_Haru
 ```
 
 ##  4. <a name='RunningInAVD'></a>Running In AVD
-AVD does not support BLE hardware.
+AVD does not support BLE hardware but can be used for designing the screen layout.
 
 Android Virtual Device must be setup in Android Studio before running in this way.
-
-AVD does not have access to Bluetooth device.
 
 ```bash
 npx expo run:android
