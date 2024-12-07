@@ -37,7 +37,7 @@ VSCodium is not supported by Microsoft and so these plugins must be manually ins
 ###  1.2. <a name='Hardware'></a>Hardware
 I used [Fritzing](https://fritzing.org/) to create a circut board layout.
 
-EPS32 part for Fritzing can be found here [ESP32S-HiLetgo Dev Boad with Pinout Template](https://forum.fritzing.org/t/esp32s-hiletgo-dev-boad-with-pinout-template/5357?u=steelgoose)
+EPS32 part for Fritzing can be found here [ESP32S-HiLetgo Dev Board with Pinout Template](https://forum.fritzing.org/t/esp32s-hiletgo-dev-boad-with-pinout-template/5357?u=steelgoose)
 
 
 ```bash
