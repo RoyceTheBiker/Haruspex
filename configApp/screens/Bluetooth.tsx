@@ -1,55 +1,68 @@
 import { styles } from '../styles/globalStyles';
 import React, { useState } from 'react';
 import { ImageBackground, Text, TouchableOpacity, View } from 'react-native';
-import { BleManager, Device, State } from 'react-native-ble-plx';
+import { BleManager, State } from 'react-native-ble-plx';
 import { Asset } from 'expo-asset';
 import bluetoothPermissions from '../libraries/bluetoothPermissions';
 
-function renderRow(btDevice, connectToDevice, navigation) {
-  console.log('BT render row %s', btDevice);
-  return (
-    <View style={styles.tableRow} key={btDevice.id}>
-      <View style={styles.tableCell}>
-        <Text style={styles.cellText}>{btDevice.name}</Text>
-      </View>
-      <View style={styles.buttonCell}>
-        <TouchableOpacity style={styles.connectButton} activeOpacity={1}>
-          <Text onPress={() => connectToDevice(btDevice.name, navigation)}>
-            Connect
-          </Text>
-        </TouchableOpacity>
-      </View> 
-    </View>
-  );
-}
-
-const connectToDevice = (deviceName, {navigation}) => {
-  console.log('Wi-Fi Setup for %s', deviceName);
-  navigation.navigate('Wi-Fi Setup', {name: deviceName});
-  // call the navigator to move to the wi-fi screen
-}
+export let flushList = false;
 
 export default function Bluetooth(navigation) {
   bluetoothPermissions();
 
   const [allDevices, setAllDevices] = useState<string[]>([]);
+  // const [resetDevices, setResetDevices] = useState(false);
+  let bleManager: BleManager;
+
+  function renderRow(btDevice, connectToDevice, navigation) {
+    console.log('BT render row %s', btDevice);
+    return (
+      <View style={styles.tableRow} key={btDevice.id}>
+        <View style={styles.tableCell}>
+          <Text style={styles.cellText}>{btDevice.name}</Text>
+        </View>
+        <View style={styles.buttonCell}>
+          <TouchableOpacity style={styles.connectButton} activeOpacity={1}>
+            <Text onPress={() => connectToDevice(btDevice.name, navigation)}>
+              Connect
+            </Text>
+          </TouchableOpacity>
+        </View> 
+      </View>
+    );
+  }
+  
+  const connectToDevice = (deviceName, {navigation}) => {
+    console.log('Wi-Fi Setup for %s', deviceName);
+    console.log('reset devices %s', 'resetDevices');
+    flushList = true;
+    navigation.navigate('Wi-Fi Setup', {name: deviceName});    
+  }
 
   const isDuplicteDevice = (devices: string[], nextDevice: string) =>
     devices.findIndex((device) => nextDevice === device) > -1;
 
-  if(allDevices.length === 0) {
-    const bleManager = new BleManager();
-    
+  if((!allDevices) || (allDevices.length === 0)) {
+    if(!bleManager) {
+      console.log('Create BleManager');
+      bleManager = new BleManager();
+    }
+        
     if(bleManager) {
       console.log('Ready to use BLE');
+      
       bleManager.startDeviceScan(null, null, (error, device) => {
         if (error) {
           console.log('Device scan error %s', error.message);
         } else {
           if(device && (device.localName || device.name)) {
             setAllDevices((prevState: string[]) => {
+              if(flushList === true) {
+                console.log('flushList = %s', flushList);
+                flushList = false;
+                prevState = null;
+              }
               if (!isDuplicteDevice(prevState, device.name)) {
-                console.log('Found device %s', device.name);
                 return [...prevState, device.name];
               }
               return prevState;

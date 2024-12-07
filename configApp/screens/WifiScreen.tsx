@@ -1,11 +1,12 @@
 import { useRef, useState } from 'react';
 import { Dropdown } from 'react-native-element-dropdown';
 import { styles } from '../styles/globalStyles';
-import { findNodeHandle, ImageBackground, Linking, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ImageBackground, Linking, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import WifiManager from 'react-native-wifi-reborn';
 import { Asset } from 'expo-asset';
-import { connectToDevice, getData, initBluetooth, putData } from '../libraries/bluetoothComs';
+import { connectToDevice, sendMessage, initBluetooth } from '../libraries/bluetoothComs';
 import { Esp32ConfT } from '../models/esp32Conf';
+
 
 type WlanT = {
     id: number,
@@ -37,10 +38,9 @@ export default function WifiScreen({navigation, route}) {
         newConfig += ', "webType": "' + webType + '"';
         newConfig += ', "esp32Cdn": "' + esp32Cdn + '"';
         newConfig += '}';
-        putData('PUT config ' + newConfig).then( (response: Esp32ConfT) => {
+        sendMessage('PUT config ' + newConfig).then( (response: Esp32ConfT) => {
             if(response.message) {
                 console.log('Got a response message %s', response.message);
-                navigation.navigate('Select Bluetooth Device');
             }
         });
     }
@@ -91,9 +91,9 @@ export default function WifiScreen({navigation, route}) {
             if(!esp32SSID) {
                 initBluetooth(route.params.name).then( (message) => {
                     console.log('BT message %s', message);
-                    connectToDevice(esp32Hostname).then( (message: string) => {
+                    connectToDevice(esp32Hostname, navigation).then( (message: string) => {
                         console.log('Message from BTLE %s', message);
-                        getData("GET config").then( (response: Esp32ConfT) => {
+                        sendMessage("GET config").then( (response: Esp32ConfT) => {
                             console.log('Got BLE responce');
                             setEsp32Hostname(response.esp32Hostname);
                             if(response.esp32SSID.length > 0) {
