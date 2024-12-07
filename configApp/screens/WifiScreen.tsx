@@ -7,7 +7,6 @@ import { Asset } from 'expo-asset';
 import { connectToDevice, sendMessage, initBluetooth } from '../libraries/bluetoothComs';
 import { Esp32ConfT } from '../models/esp32Conf';
 
-
 type WlanT = {
     id: number,
     label: string,

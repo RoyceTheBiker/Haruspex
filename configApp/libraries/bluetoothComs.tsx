@@ -128,30 +128,4 @@ export const sendMessage = (request: string): Promise<Esp32ConfT> => {
     });
 };
 
-// export const putData = (request: string): Promise<Esp32ConfT> => {
-//     return new Promise( (resolve, reject) => {
-//         // btdevice send request, get a response
-//         bleManager.state().then( (bleState: State) => {
-//             console.log('BLE State is %s', bleState);
-//             if(bleState === 'PoweredOn') {
-//                 console.log('Sending message to %s requesting %s', writeChannel.uuid, request);
-//                 let requestB64 = Base64.encode(request);
-//                 writeChannel.writeWithoutResponse(requestB64).then( (response: Characteristic) => {
-//                     response.monitor( (err: BleError, charactoristic: Characteristic) => {
-//                         if(err) {
-//                             console.error(err.message);
-//                         } else {
-//                             console.log('Put got a response');
-//                             resolve(Base64.decode(charactoristic.value));
-//                         }
-//                     });
-//                 }).catch( (err) => {
-//                     console.error('response %s', err.message);
-//                 });
-//             } else {
-//                 resolve({ "message": "Bluetooth is turned off" });
-//             }
-//         });
-//     });
-// };
 

@@ -11,7 +11,6 @@ export default function Bluetooth(navigation) {
   bluetoothPermissions();
 
   const [allDevices, setAllDevices] = useState<string[]>([]);
-  // const [resetDevices, setResetDevices] = useState(false);
   let bleManager: BleManager;
 
   function renderRow(btDevice, connectToDevice, navigation) {
