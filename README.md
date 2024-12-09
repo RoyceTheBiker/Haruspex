@@ -15,7 +15,9 @@ This is my first Bluetooth project with the ESP32 but it was having a lot of pro
 * 4. [Running In AVD](#RunningInAVD)
 * 5. [Wifi Credentials](#WifiCredentials)
 * 6. [The Data Partition](#TheDataPartition)
-* 7. [Useful Links](#UsefulLinks)
+* 7. [Frontend CDN](#FrontendCDN)
+* 8. [Web Type](#WebType)
+* 9. [Useful Links](#UsefulLinks)
 
 <!-- vscode-markdown-toc-config
 	numbering=true
@@ -195,14 +197,14 @@ The LibreOffice Calc file is configured to calculate the partition sizes and off
 =CONCAT("0x", DEC2HEX(HEX2DEC(RIGHT(D3, LEN(D3)-2))+HEX2DEC(RIGHT(E3, LEN(E3)-2))))
 ```
 
-# Frontend CDN
+##  7. <a name="FrontendCDN"></a> Frontend CDN
 The frontend files are served from a CDN (Content Delivery Network).
 To do this ``Access-Control-Allow-Origin`` is set in the header served by [webServer.cpp](./src/webServer.cpp)
 and in the CDN.
 
 For development the frontend can be served locally using [webServer.py](./frontend/webServer.py) that has CORS enabled.
 
-# Web Type
+##  8. <a name="WebType"></a> Web Type
 The Web Type is a configuration value that selects the front end web pages to load.
 
 Available Web Types:
@@ -210,7 +212,7 @@ Available Web Types:
  * leds loads [leds.js](./frontend/leds.js)
 
 
-##  7. <a name='UsefulLinks'></a>Useful Links
+##  9. <a name='UsefulLinks'></a>Useful Links
 - [ESP32 Dev Kit Power Options](https://techexplorations.com/guides/esp32/begin/power/)
 - [Amazon ESP32 Dev](https://www.amazon.ca/gp/product/B07QCP2451/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&th=1)
 - [ESP32-WROOM Datasheet](https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32_datasheet_en.pdf)
