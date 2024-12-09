@@ -39,6 +39,7 @@ export default function WifiScreen({navigation, route}) {
         newConfig += '}';
         sendMessage('PUT config ' + newConfig).then( (response: Esp32ConfT) => {
             if(response.message) {
+                alert('Settings saved. Restarting app.');
                 console.log('Got a response message %s', response.message);
             }
         });
@@ -192,8 +193,8 @@ export default function WifiScreen({navigation, route}) {
                         </View>
 
                         <View style={styles.row}>
-                            <TouchableOpacity style={styles.button} activeOpacity={5}>
-                                <Text onPress={() => saveSettings()}>
+                            <TouchableOpacity style={styles.button} activeOpacity={5} onPress={() => saveSettings()}>
+                                <Text>
                                 Save Settings
                                 </Text>
                             </TouchableOpacity>

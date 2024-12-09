@@ -55,6 +55,7 @@ export default function Bluetooth(navigation) {
           console.log('Device scan error %s', error.message);
         } else {
           if(device && (device.localName || device.name)) {
+            
             setAllDevices((prevState: string[]) => {
               if(flushList === true) {
                 console.log('flushList = %s', flushList);
@@ -62,6 +63,8 @@ export default function Bluetooth(navigation) {
                 prevState = null;
               }
               if (!isDuplicteDevice(prevState, device.name)) {
+                console.log('device.localName %s', device.localName);
+            console.log('device.name %s', device.name);
                 return [...prevState, device.name];
               }
               return prevState;
