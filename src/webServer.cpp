@@ -129,6 +129,7 @@ int webServerListen() {
     // Clear the header variable
     request = "";
     // Close the connection
+    delay(200);
     client.stop();
     Serial.println("Client disconnected.");
     Serial.println("");
