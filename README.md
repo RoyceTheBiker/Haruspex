@@ -202,6 +202,12 @@ and in the CDN.
 
 For development the frontend can be served locally using [webServer.py](./frontend/webServer.py) that has CORS enabled.
 
+# Web Type
+The Web Type is a configuration value that selects the front end web pages to load.
+
+Available Web Types:
+ * haruspex loads [haruspex.js](./frontend/haruspex.js)
+ * leds loads [leds.js](./frontend/leds.js)
 
 
 ##  7. <a name='UsefulLinks'></a>Useful Links
