@@ -42,3 +42,4 @@ yarn-error.*
 configApp/android
 configApp/ios
 *.apk
+*/.~lock.*
