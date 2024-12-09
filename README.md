@@ -1,10 +1,10 @@
 # Haruspex
-A web server built on the ESP32 platform. It uses a React-Native app for Android to setup the Wi-Fi credentials and it serves the web frontend from an external CDN to save space in the microcontroller.
+A web server built on the ESP32 platform. It uses a React-Native app for Android to set up the Wi-Fi credentials and it serves the web frontend from an external CDN to save space in the microcontroller.
 
-First commit was a rudimentary web server as taken from the example [ESP32 Web Server](https://randomnerdtutorials.com/esp32-web-server-arduino-ide/)
-with some small changes. Code was changed to not block requests from other clients so that multiple connections can be made.
+The first commit was a rudimentary web server as taken from the example [ESP32 Web Server](https://randomnerdtutorials.com/esp32-web-server-arduino-ide/)
+with some small changes. The code was changed so that requests from other clients are not blocked so that multiple connections can be made.
 
-This is my first Bluetooth project with the ESP32 but it was having a lot of problems communication with the React-Native app. To isolate the problems the [BletiaCS](https://gitlab.com/SiliconTao-Embedded/BletiaCS) project was created to test Bluetooth communications between a client and a server that are both ESP32 devices.
+This is my first Bluetooth project with the ESP32 but it was having a lot of problems communicating with the React-Native app. To isolate the problems the [BletiaCS](https://gitlab.com/SiliconTao-Embedded/BletiaCS) project was created to test Bluetooth communications between a client and a server that are both ESP32 devices.
 
 <!-- vscode-markdown-toc -->
 * 1. [Development](#Development)
@@ -28,7 +28,7 @@ This is my first Bluetooth project with the ESP32 but it was having a lot of pro
 
 ##  1. <a name='Development'></a>Development
 ###  1.1. <a name='VSCodium'></a>VS Codium
-The development of this project is done with VSCodium and the PlatformIO extension.
+This project was developed with VSCodium and the PlatformIO extension.
 
 VSCodium is not supported by Microsoft and so these plugins must be manually installed.
 1. Download [cpptools-linux.vsix](https://github.com/microsoft/vscode-cpptools/releases/download/1.3.1/cpptools-linux.vsix)
@@ -117,12 +117,12 @@ export PATH=$PATH:$ANDROID_HOME/emulator
 export JAVA_HOME=/Library/Java/JavaVirtualMachines/amazon-corretto-21.jdk/Contents/Home
 ```
 
-Once you have setup your Java environment variables compile the DEV version of the code like so.
+Once you have set up your Java environment variables compile the DEV version of the code like so.
 ```bash
 cd configApp
 npm install
 npm run dev_build # Builds HaruspexDev.apk to debug with Expo Metro
-npm run release_build # Build Haruspex.apk as standalone app
+npm run release_build # Build Haruspex.apk as a standalone app
 ```
 
 If you are not able to compile the APK, this prebuilt one is available.
@@ -154,7 +154,7 @@ ADB requires that the phone be in developer mode and that ``USB Debugging`` be e
 
 ADB is a command line tool that can be used for file management of the Android device.
 
-List files in Screenshots folder
+List files in the Screenshots folder
 ```
 adb shell ls -R "/storage/self/primary/DCIM//Screenshots/"
 ```
@@ -166,9 +166,9 @@ adb pull /storage/self/primary/DCIM//Screenshots/Screenshot_20241112-092414_Haru
 ```
 
 ##  4. <a name='RunningInAVD'></a>Running In AVD
-AVD does not support BLE hardware but can be used for designing the screen layout.
+AVD does not support BLE hardware but can be used to design the screen layout.
 
-Android Virtual Device must be setup in Android Studio before running in this way.
+Android Virtual Device must be set up in Android Studio before running in this way.
 
 ```bash
 npx expo run:android
@@ -191,7 +191,7 @@ The data partition is used to store files that are not compiled code.
 
 The ``./data`` directory must be built as a Filesystem Image in PlatformIO and uploaded to the ESP32.
 
-The LibreOffice Calc file is configured to calculate the partition sizes and offsets. It uses a function to convert HEX2DEC, perform the calculations and convert back to HEX with a prefix ``0x``
+The LibreOffice Calc file is configured to calculate the partition sizes and offsets. It uses a function to convert HEX2DEC, perform the calculations, and convert back to HEX with a prefix ``0x``
 
 ```
 =CONCAT("0x", DEC2HEX(HEX2DEC(RIGHT(D3, LEN(D3)-2))+HEX2DEC(RIGHT(E3, LEN(E3)-2))))
@@ -202,10 +202,10 @@ The frontend files are served from a CDN (Content Delivery Network).
 To do this ``Access-Control-Allow-Origin`` is set in the header served by [webServer.cpp](./src/webServer.cpp)
 and in the CDN.
 
-For development the frontend can be served locally using [webServer.py](./frontend/webServer.py) that has CORS enabled.
+For development, the frontend can be served locally using [webServer.py](./frontend/webServer.py) that has CORS enabled.
 
 ##  8. <a name="WebType"></a> Web Type
-The Web Type is a configuration value that selects the front end web pages to load.
+The Web Type is a configuration value that selects the front-end web pages to load.
 
 Available Web Types:
  * haruspex loads [haruspex.js](./frontend/haruspex.js)
