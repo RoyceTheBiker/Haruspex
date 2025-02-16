@@ -6,6 +6,9 @@ with some small changes. The code was changed so that requests from other client
 
 This is my first Bluetooth project with the ESP32 but it was having a lot of problems communicating with the React-Native app. To isolate the problems the [BletiaCS](https://gitlab.com/SiliconTao-Embedded/BletiaCS) project was created to test Bluetooth communications between a client and a server that are both ESP32 devices.
 
+Project homepage on [SiliconTao.com](https://silicontao.com/main/marquis/article/RoyceTheBiker/Haruspex)
+
+
 <!-- vscode-markdown-toc -->
 * 1. [Development](#Development)
 	* 1.1. [VS Codium](#VSCodium)
