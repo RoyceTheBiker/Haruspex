@@ -8,6 +8,28 @@ This is my first Bluetooth project with the ESP32 but it was having a lot of pro
 
 Project homepage on [SiliconTao.com](https://silicontao.com/main/marquis/article/RoyceTheBiker/Haruspex)
 
+---
+
+<table width="100%">
+  <tr>
+    <td width="30%"></td>
+    <td width="40%">
+      <a href="https://www.youtube.com/watch?v=dPI4T5vdAcY" target="_blank">
+      <img src="https://img.youtube.com/vi/dPI4T5vdAcY/0.jpg"
+      alt="Haruspex ESP32 Bluetooth & Wi-Fi with React-Native Android app">
+      </a>
+    </td>
+    <td width="30%"></td>
+  </tr>
+  <tr>
+    <td width="30%"></td>
+    <td width="40%">Haruspex ESP32 Bluetooth & Wi-Fi with React-Native Android app</td>
+    <td width="30%"></td>
+  </tr>
+</table>
+
+---
+
 
 <!-- vscode-markdown-toc -->
 * 1. [Development](#Development)
