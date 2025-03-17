@@ -49,13 +49,13 @@ export const connectToDevice = (deviceName: string, navigation): Promise<string>
                 bleManager.destroy().then( () => {
                     bleManager = null;
                     NativeModules.DevSettings.reload();
-                    // navigation.navigate('Select Bluetooth Device');                    
+                    // navigation.navigate('Select Bluetooth Device');
                 });
             });
             console.log('Discovering characteristics');
             return device?.discoverAllServicesAndCharacteristics();
         }).then( (device: Device) => {
-            console.log('charactoristics discovered');
+            console.log('characteristics discovered');
             return device?.services().catch( (error) => {
                 console.error('no service to return');
                 console.error(error);
@@ -64,14 +64,14 @@ export const connectToDevice = (deviceName: string, navigation): Promise<string>
             console.error('device services did not return a promise');
             console.error(error);
         }).then( (services: Service[]) => {
-            
+
             btServices = new Array<Service>;
             services?.forEach( (service) => {
                 btServices.push(service);
                 service.characteristics().then( (channels: Characteristic[]) => {
                     channels.forEach( (channel) => {
                         if(channel.uuid === WriteToESP32) {
-                            console.log('write channel has write with response %s', 
+                            console.log('write channel has write with response %s',
                                 channel.isWritableWithResponse ? 'true' : 'false');
                             writeChannel = channel;
                         }
@@ -101,15 +101,15 @@ export const sendMessage = (request: string): Promise<Esp32ConfT> => {
             console.log('BLE State is %s', bleState);
             if((bleState === 'PoweredOn') && writeChannel) {
                 console.log('Sending message to %s requesting %s', writeChannel.uuid, request);
-        
+
                 let requestB64 = Base64.encode(request);
                 writeChannel.writeWithoutResponse(requestB64).then( (response: Characteristic) => {
-                    response.monitor( (err: BleError, charactoristic: Characteristic) => {
+                    response.monitor( (err: BleError, characteristic: Characteristic) => {
                         if(err) {
                             console.error(err.message);
                         } else {
-                            console.log("charactoristic replied");
-                            let messageString = "" + Base64.decode(charactoristic.value);
+                            console.log("characteristic replied");
+                            let messageString = "" + Base64.decode(characteristic.value);
                             console.log('characteristic value %s', messageString);
                             let objMsg = JSON.parse(messageString);
                             Object.keys(objMsg).forEach( (cVkey) => {
