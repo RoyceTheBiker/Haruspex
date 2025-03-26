@@ -1,10 +1,10 @@
 # Haruspex
-A web server built on the ESP32 platform. It uses a React-Native app for Android to set up the Wi-Fi credentials and it serves the web frontend from an external CDN to save space in the microcontroller.
+A web server built on the ESP32 platform. It uses a React-Native app for Android to set up the Wi-Fi credentials, and it serves the web frontend from an external CDN to save space in the microcontroller.
 
 The first commit was a rudimentary web server as taken from the example [ESP32 Web Server](https://randomnerdtutorials.com/esp32-web-server-arduino-ide/)
-with some small changes. The code was changed so that requests from other clients are not blocked so that multiple connections can be made.
+with some small changes. The code was changed so that requests from other clients are not blocked, so that multiple connections can be made.
 
-This is my first Bluetooth project with the ESP32 but it was having a lot of problems communicating with the React-Native app. To isolate the problems the [BletiaCS](https://gitlab.com/SiliconTao-Embedded/BletiaCS) project was created to test Bluetooth communications between a client and a server that are both ESP32 devices.
+This is my first Bluetooth project with the ESP32 but it was having a lot of problems communicating with the React-Native app. To isolate the problems, the [BletiaCS](https://gitlab.com/SiliconTao-Embedded/BletiaCS) project was created to test Bluetooth communications between a client and a server that are both ESP32 devices.
 
 Project homepage on [SiliconTao.com](https://silicontao.com/main/marquis/article/RoyceTheBiker/Haruspex)
 
@@ -57,7 +57,7 @@ Project repository on [GitLab](https://gitlab.com/SiliconTao-Embedded/Haruspex)
 ###  1.1. <a name='VSCodium'></a>VS Codium
 This project was developed with VSCodium and the PlatformIO extension.
 
-VSCodium is not supported by Microsoft and so these plugins must be manually installed.
+VSCodium is not supported by Microsoft, and so these plugins must be manually installed.
 1. Download [cpptools-linux.vsix](https://github.com/microsoft/vscode-cpptools/releases/download/1.3.1/cpptools-linux.vsix)
 2. Install cpptools-linux.vsix in vscodium under extensions / install from vsix
 3. Download [PlatformIO vsix](https://marketplace.visualstudio.com/items?itemName=platformio.platformio-ide) (download button on right side)
@@ -92,8 +92,8 @@ Hard resetting via RTS pin...
 ##  2. <a name='configApp'></a>configApp
 An Android app developed using React-Native Expo
 
-First attempt to use Bluetooth was with [react-native-ble-manager](https://www.npmjs.com/package/react-native-ble-manager) which seems like a great choice with support for Android 4 and newer APIs.
-Unfortunately it does not seem to be compatible with Expo because it requires setting [AndroidManifest](https://github.com/innoveit/react-native-ble-manager/blob/master/example/plugins/withBLEAndroidManifest.js) that is not supported by Expo, or at least not in this way.
+First attempt to use Bluetooth was with [react-native-ble-manager](https://www.npmjs.com/package/react-native-ble-manager), which seems like a great choice with support for Android 4 and newer APIs.
+Unfortunately, it does not seem to be compatible with Expo because it requires setting [AndroidManifest](https://github.com/innoveit/react-native-ble-manager/blob/master/example/plugins/withBLEAndroidManifest.js) that is not supported by Expo, or at least not in this way.
 
 Expo has a different module [react-native-ble-plx](https://expo.dev/blog/how-to-build-a-bluetooth-low-energy-powered-expo-app)
 
@@ -101,7 +101,7 @@ Big thanks to the developers of [Punch Through LightBlue](https://punchthrough.c
 
 ![Punch Through logo](./frontend/PunchThrough.png)
 
-[Expo Go](https://expo.dev/go) does not support using the Bluetooth hardware but is great for quickly testing screen layout and desgines, it will automatically update with changes live.
+[Expo Go](https://expo.dev/go) does not support using Bluetooth hardware but is great for quickly testing screen layouts and designs, it will automatically update with live changes.
 
 Installing packages uses ``npx expo install <package name>``.
 
@@ -132,7 +132,7 @@ npx expo install expo-dev-client
 npx expo run:android
 ```
 
-To build the APK use [eas-cli](https://www.npmjs.com/package/eas-cli)
+To build the APK, use [eas-cli](https://www.npmjs.com/package/eas-cli)
 
 Set the Android SDK path and environment variable in the shell profile. These values are specific to my environment. You will need to adjust them to match your environment.
 ```bash
@@ -144,7 +144,7 @@ export PATH=$PATH:$ANDROID_HOME/emulator
 export JAVA_HOME=/Library/Java/JavaVirtualMachines/amazon-corretto-21.jdk/Contents/Home
 ```
 
-Once you have set up your Java environment variables compile the DEV version of the code like so.
+Once you have set up your Java environment variables, compile the DEV version of the code like so.
 ```bash
 cd configApp
 npm install
@@ -179,7 +179,7 @@ npx expo start
 ##  3. <a name='AndroidDebugBridgeadb'></a>Android Debug Bridge (adb)
 ADB requires that the phone be in developer mode and that ``USB Debugging`` be enabled in `Settings` -> `Developer Options`.
 
-ADB is a command line tool that can be used for file management of the Android device.
+ADB is a command-line tool that can be used for file management of the Android device.
 
 List files in the Screenshots folder
 ```
