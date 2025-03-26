@@ -8,6 +8,8 @@ This is my first Bluetooth project with the ESP32 but it was having a lot of pro
 
 Project homepage on [SiliconTao.com](https://silicontao.com/main/marquis/article/RoyceTheBiker/Haruspex)
 
+Project repository on [GitLab](https://gitlab.com/SiliconTao-Embedded/Haruspex)
+
 ---
 
 <table width="100%">
